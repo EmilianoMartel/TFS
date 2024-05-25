@@ -158,6 +158,7 @@ namespace StarterAssets
 
             JumpAndGravity();
             GroundedCheck();
+            Fire();
             Move();
         }
 
@@ -346,6 +347,11 @@ namespace StarterAssets
             {
                 _verticalVelocity += Gravity * Time.deltaTime;
             }
+        }
+
+        private void Fire()
+        {
+            _animator.SetBool("Fire", _input.fire);
         }
 
         private static float ClampAngle(float lfAngle, float lfMin, float lfMax)
