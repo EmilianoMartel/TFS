@@ -79,6 +79,7 @@ public class PlayerController : MonoBehaviour
     private float _rotationVelocity;
     private float _verticalVelocity;
     private float _terminalVelocity = 53.0f;
+    private Vector2 _lastMovementInput;
 
     // timeout deltatime
     private float _jumpTimeoutDelta;
@@ -92,11 +93,11 @@ public class PlayerController : MonoBehaviour
     private int _animIDMotionSpeed;
 
 #if ENABLE_INPUT_SYSTEM
-    private PlayerInput _playerInput;
+    [SerializeField] private PlayerInput _playerInput;
 #endif
     private Animator _animator;
     private CharacterController _controller;
-    private StarterAssetsInputs _input;
+    [SerializeField] private StarterAssetsInputs _input;
     private GameObject _mainCamera;
 
     private const float _threshold = 0.01f;
@@ -131,9 +132,9 @@ public class PlayerController : MonoBehaviour
 
         _hasAnimator = TryGetComponent(out _animator);
         _controller = GetComponent<CharacterController>();
-        _input = GetComponent<StarterAssetsInputs>();
+        //_input = GetComponent<StarterAssetsInputs>();
 #if ENABLE_INPUT_SYSTEM
-        _playerInput = GetComponent<PlayerInput>();
+        //_playerInput = GetComponent<PlayerInput>();
 #else
 			Debug.LogError( "Starter Assets package is missing dependencies. Please use Tools/Starter Assets/Reinstall Dependencies to fix it");
 #endif
@@ -247,8 +248,7 @@ public class PlayerController : MonoBehaviour
 
         // note: Vector2's != operator uses approximation so is not floating point error prone, and is cheaper than magnitude
         // if there is a move input rotate player when the player is moving
-        //TODO
-        if (_input.move != Vector2.zero)
+        /*if (_input.move != Vector2.zero)
         {
             _targetRotation = Mathf.Atan2(inputDirection.x, inputDirection.z) * Mathf.Rad2Deg +
                               _mainCamera.transform.eulerAngles.y;
@@ -257,8 +257,7 @@ public class PlayerController : MonoBehaviour
         
             // rotate to face input direction relative to camera position
             transform.rotation = Quaternion.Euler(0.0f, rotation, 0.0f);
-        }
-
+        }*/
 
         Vector3 targetDirection = Quaternion.Euler(0.0f, _targetRotation, 0.0f) * Vector3.forward;
 
@@ -273,14 +272,14 @@ public class PlayerController : MonoBehaviour
             _animator.SetFloat(_animIDMotionSpeed, inputMagnitude);
         }
 
-        //TODO
+        //TO-DO
         var xSpeed = _input.move.x * _animationBlend;
         var ySpeed = _input.move.y * _animationBlend;
         _animator.SetFloat("xSpeed", xSpeed);
         _animator.SetFloat("zSpeed", ySpeed);
     }
 
-    //TODO: Hacer esto bien
+    //TO-DO: Hacer esto bien
     private void Fire()
     {
         _animator.SetBool("Fire", _input.fire);

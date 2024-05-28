@@ -1,6 +1,8 @@
+using System;
 using UnityEngine;
 #if ENABLE_INPUT_SYSTEM
 using UnityEngine.InputSystem;
+using static UnityEngine.Rendering.DebugUI;
 #endif
 
 namespace StarterAssets
@@ -22,8 +24,13 @@ namespace StarterAssets
 		public bool cursorLocked = true;
 		public bool cursorInputForLook = true;
 
+		[Header("Channels")]
+        [SerializeField] private BoolChanelSo _isTriggerEvent;
+		[SerializeField] private EmptyAction _onReloadEvent;
+		[SerializeField] private BoolChanelSo _aimEvent;
+
 #if ENABLE_INPUT_SYSTEM
-		public void OnMove(InputValue value)
+        public void OnMove(InputValue value)
 		{
 			MoveInput(value.Get<Vector2>());
 		}
@@ -55,6 +62,12 @@ namespace StarterAssets
         {
             AimInput(value.isPressed);
         }
+
+        public void OnReload(InputValue value)
+        {
+			if(value.isPressed)
+				ReloadInput();
+        }
 #endif
 
 
@@ -81,11 +94,18 @@ namespace StarterAssets
         public void AimInput(bool newSprintState)
         {
             aim = newSprintState;
+            _aimEvent?.InvokeEvent(newSprintState);
         }
 
         public void FireInput(bool newSprintState)
         {
             fire = newSprintState;
+			_isTriggerEvent?.InvokeEvent(newSprintState);
+        }
+
+		public void ReloadInput()
+		{
+            _onReloadEvent?.InvokeEvent();
         }
         
 		private void OnApplicationFocus(bool hasFocus)
@@ -98,5 +118,4 @@ namespace StarterAssets
 			Cursor.lockState = newState ? CursorLockMode.Locked : CursorLockMode.None;
 		}
 	}
-	
 }
