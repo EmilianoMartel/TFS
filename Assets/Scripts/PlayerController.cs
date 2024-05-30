@@ -223,7 +223,7 @@ public class PlayerController : MonoBehaviour
 
     private void Move()
     {
-        SetSpeed();
+        float targetSpeed = SetSpeed();
 
         _animationBlend = Mathf.Lerp(_animationBlend, _speed, Time.deltaTime * SpeedChangeRate);
         if (_animationBlend < 0.01f) _animationBlend = 0f;
@@ -233,7 +233,7 @@ public class PlayerController : MonoBehaviour
         Vector3 targetDirection = Quaternion.Euler(0.0f, _targetRotation, 0.0f) * Vector3.forward;
 
         // move the player
-        _controller.Move(targetDirection.normalized * (_speed * Time.deltaTime) +
+        _controller.Move(targetDirection.normalized * (targetSpeed * Time.deltaTime) +
                          new Vector3(0.0f, _verticalVelocity, 0.0f) * Time.deltaTime);
 
         float inputMagnitude = _input.analogMovement ? _input.move.magnitude : 1f;
@@ -245,8 +245,8 @@ public class PlayerController : MonoBehaviour
         }
 
         //TO-DO
-        var xSpeed = _input.move.x * _animationBlend;
-        var ySpeed = _input.move.y * _animationBlend;
+        var xSpeed = _input.move.x * targetSpeed;
+        var ySpeed = _input.move.y * targetSpeed;
         _animator.SetFloat("xSpeed", xSpeed);
         _animator.SetFloat("zSpeed", ySpeed);
     }
@@ -377,7 +377,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private void SetSpeed()
+    private float SetSpeed()
     {
         // set target speed based on move speed, sprint speed and if sprint is pressed
         float targetSpeed = _input.sprint ? SprintSpeed : MoveSpeed;
@@ -410,5 +410,7 @@ public class PlayerController : MonoBehaviour
         {
             _speed = targetSpeed;
         }
+
+        return targetSpeed;
     }
 }
