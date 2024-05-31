@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Rendering;
 using UnityEngine.Windows;
 
 public class PlayerController : MonoBehaviour
@@ -68,9 +69,16 @@ public class PlayerController : MonoBehaviour
     [Tooltip("For locking the camera position on all axis")]
     public bool LockCameraPosition = false;
 
+    [Header("Camera aim Limits")]
+    [SerializeField] private float _minLateralLimit = -30;
+    [SerializeField] private float _maxLateralLimit = 30;
+    [SerializeField] private float _bottonClamp = -10;
+    [SerializeField] private float _topClamp = 10;
+
     // cinemachine
     private float _cinemachineTargetYaw;
     private float _cinemachineTargetPitch;
+    private Quaternion _lastCameraRotation;
 
     // player
     private float _speed;
@@ -105,6 +113,8 @@ public class PlayerController : MonoBehaviour
 
     private bool _hasAnimator;
 
+    [SerializeField] private BoolChanelSo _aimEvent;
+
     private bool IsCurrentDeviceMouse
     {
         get
@@ -117,6 +127,15 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    private void OnEnable()
+    {
+        _aimEvent?.Sucription(HandleAim);
+    }
+
+    private void OnDisable()
+    {
+        _aimEvent?.Unsuscribe(HandleAim);
+    }
 
     private void Awake()
     {
@@ -155,7 +174,7 @@ public class PlayerController : MonoBehaviour
 
         JumpAndGravity();
         GroundedCheck();
-        HandleLookInput(_input.look);
+        HandleRotateMeshInput(_input.look);
         Move();
         Fire();
     }
@@ -201,9 +220,17 @@ public class PlayerController : MonoBehaviour
             _cinemachineTargetPitch += _input.look.y * deltaTimeMultiplier;
         }
 
-        // clamp our rotations so our values are limited 360 degrees
-        _cinemachineTargetYaw = ClampAngle(_cinemachineTargetYaw, float.MinValue, float.MaxValue);
-        _cinemachineTargetPitch = ClampAngle(_cinemachineTargetPitch, BottomClamp, TopClamp);
+        if (_input.aim)
+        {
+            _cinemachineTargetYaw = ClampAngle(_cinemachineTargetYaw, _minLateralLimit, _maxLateralLimit);
+            _cinemachineTargetPitch = ClampAngle(_cinemachineTargetPitch, _bottonClamp, _topClamp);
+        }
+        else
+        {
+            // clamp our rotations so our values are limited 360 degrees
+            _cinemachineTargetYaw = ClampAngle(_cinemachineTargetYaw, float.MinValue, float.MaxValue);
+            _cinemachineTargetPitch = ClampAngle(_cinemachineTargetPitch, BottomClamp, TopClamp);
+        }
 
         // Cinemachine will follow this target
         CinemachineCameraTarget.transform.rotation = Quaternion.Euler(_cinemachineTargetPitch + CameraAngleOverride,
@@ -211,8 +238,13 @@ public class PlayerController : MonoBehaviour
     }
 
     //TO-DO
-    private void HandleLookInput(Vector2 look)
+    private void HandleRotateMeshInput(Vector2 look)
     {
+        if (_input.aim)
+        {
+            return;
+        }
+
         float deltaTimeMultiplier = IsCurrentDeviceMouse ? 1.0f : Time.deltaTime;
 
         float yRot = look.x * deltaTimeMultiplier;
@@ -412,5 +444,18 @@ public class PlayerController : MonoBehaviour
         }
 
         return targetSpeed;
+    }
+
+    //TO-DO
+    private void HandleAim(bool isAiming)
+    {
+        if (isAiming)
+        {
+            _lastCameraRotation = _characterTargetRot;
+        }
+        else
+        {
+            CinemachineCameraTarget.transform.rotation = _lastCameraRotation;
+        }
     }
 }

@@ -698,8 +698,14 @@ PrefabInstance:
     - target: {fileID: 6213687455335488688, guid: b9ea536d4ee368f4481df036019b382f,
         type: 3}
       propertyPath: MoveSpeed
-      value: 10
+      value: 5
       objectReference: {fileID: 0}
+    - target: {fileID: 6213687455335488688, guid: b9ea536d4ee368f4481df036019b382f,
+        type: 3}
+      propertyPath: _aimEvent
+      value: 
+      objectReference: {fileID: 11400000, guid: 54738848dd0bcb34c948a80149008476,
+        type: 2}
     - target: {fileID: 6213687455335488688, guid: b9ea536d4ee368f4481df036019b382f,
         type: 3}
       propertyPath: _playerInput

@@ -21,7 +21,7 @@ public class GameManager : MonoBehaviour
 
     private void OnEnable()
     {
-        //_generatorLife.dead += HandleGeneratorDie;    
+        //_generatorLife.dead += HandleGeneratorDie;
     }
 
     private void OnDisable()
