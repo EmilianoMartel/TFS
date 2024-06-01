@@ -53,32 +53,11 @@ public class PlayerController : MonoBehaviour
     [Tooltip("What layers the character uses as ground")]
     public LayerMask GroundLayers;
 
-    [Header("Cinemachine")]
-    [Tooltip("The follow target set in the Cinemachine Virtual Camera that the camera will follow")]
-    public GameObject CinemachineCameraTarget;
-
-    [Tooltip("How far in degrees can you move the camera up")]
-    public float TopClamp = 70.0f;
-
-    [Tooltip("How far in degrees can you move the camera down")]
-    public float BottomClamp = -30.0f;
-
-    [Tooltip("Additional degress to override the camera. Useful for fine tuning camera position when locked")]
-    public float CameraAngleOverride = 0.0f;
-
-    [Tooltip("For locking the camera position on all axis")]
-    public bool LockCameraPosition = false;
-
     [Header("Camera aim Limits")]
-    [SerializeField] private float _minLateralLimit = -30;
-    [SerializeField] private float _maxLateralLimit = 30;
+    [SerializeField] private float _minLateralLimit = -45f;
+    [SerializeField] private float _maxLateralLimit = 45f;
     [SerializeField] private float _bottonClamp = -10;
     [SerializeField] private float _topClamp = 10;
-
-    // cinemachine
-    private float _cinemachineTargetYaw;
-    private float _cinemachineTargetPitch;
-    private Quaternion _lastCameraRotation;
 
     // player
     private float _speed;
@@ -88,7 +67,6 @@ public class PlayerController : MonoBehaviour
     private float _verticalVelocity;
     private float _terminalVelocity = 53.0f;
     private Quaternion _characterTargetRot;
-    private Vector2 _lastMovementInput;
 
     // timeout deltatime
     private float _jumpTimeoutDelta;
@@ -109,8 +87,6 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private StarterAssetsInputs _input;
     private GameObject _mainCamera;
 
-    private const float _threshold = 0.01f;
-
     private bool _hasAnimator;
 
     [SerializeField] private BoolChanelSo _aimEvent;
@@ -127,16 +103,6 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private void OnEnable()
-    {
-        _aimEvent?.Sucription(HandleAim);
-    }
-
-    private void OnDisable()
-    {
-        _aimEvent?.Unsuscribe(HandleAim);
-    }
-
     private void Awake()
     {
         // get a reference to our main camera
@@ -148,8 +114,6 @@ public class PlayerController : MonoBehaviour
 
     private void Start()
     {
-        _cinemachineTargetYaw = CinemachineCameraTarget.transform.rotation.eulerAngles.y;
-
         _hasAnimator = TryGetComponent(out _animator);
         _controller = GetComponent<CharacterController>();
         //_input = GetComponent<StarterAssetsInputs>();
@@ -179,11 +143,6 @@ public class PlayerController : MonoBehaviour
         Fire();
     }
 
-    private void LateUpdate()
-    {
-        CameraRotation();
-    }
-
     private void AssignAnimationIDs()
     {
         _animIDSpeed = Animator.StringToHash("Speed");
@@ -206,35 +165,6 @@ public class PlayerController : MonoBehaviour
         {
             _animator.SetBool(_animIDGrounded, Grounded);
         }
-    }
-
-    private void CameraRotation()
-    {
-        // if there is an input and camera position is not fixed
-        if (_input.look.sqrMagnitude >= _threshold && !LockCameraPosition)
-        {
-            //Don't multiply mouse input by Time.deltaTime;
-            float deltaTimeMultiplier = IsCurrentDeviceMouse ? 1.0f : Time.deltaTime;
-
-            _cinemachineTargetYaw += _input.look.x * deltaTimeMultiplier;
-            _cinemachineTargetPitch += _input.look.y * deltaTimeMultiplier;
-        }
-
-        if (_input.aim)
-        {
-            _cinemachineTargetYaw = ClampAngle(_cinemachineTargetYaw, _minLateralLimit, _maxLateralLimit);
-            _cinemachineTargetPitch = ClampAngle(_cinemachineTargetPitch, _bottonClamp, _topClamp);
-        }
-        else
-        {
-            // clamp our rotations so our values are limited 360 degrees
-            _cinemachineTargetYaw = ClampAngle(_cinemachineTargetYaw, float.MinValue, float.MaxValue);
-            _cinemachineTargetPitch = ClampAngle(_cinemachineTargetPitch, BottomClamp, TopClamp);
-        }
-
-        // Cinemachine will follow this target
-        CinemachineCameraTarget.transform.rotation = Quaternion.Euler(_cinemachineTargetPitch + CameraAngleOverride,
-            _cinemachineTargetYaw, 0.0f);
     }
 
     //TO-DO
@@ -358,13 +288,6 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private static float ClampAngle(float lfAngle, float lfMin, float lfMax)
-    {
-        if (lfAngle < -360f) lfAngle += 360f;
-        if (lfAngle > 360f) lfAngle -= 360f;
-        return Mathf.Clamp(lfAngle, lfMin, lfMax);
-    }
-
     private void OnDrawGizmosSelected()
     {
         Color transparentGreen = new Color(0.0f, 1.0f, 0.0f, 0.35f);
@@ -444,18 +367,5 @@ public class PlayerController : MonoBehaviour
         }
 
         return targetSpeed;
-    }
-
-    //TO-DO
-    private void HandleAim(bool isAiming)
-    {
-        if (isAiming)
-        {
-            _lastCameraRotation = _characterTargetRot;
-        }
-        else
-        {
-            CinemachineCameraTarget.transform.rotation = _lastCameraRotation;
-        }
     }
 }

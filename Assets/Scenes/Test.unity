@@ -542,6 +542,12 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1739777913 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 823442220737780809, guid: b9ea536d4ee368f4481df036019b382f,
+    type: 3}
+  m_PrefabInstance: {fileID: 823442220667841100}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1834257601
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1009,10 +1015,20 @@ PrefabInstance:
       propertyPath: m_Follow
       value: 
       objectReference: {fileID: 2077586950}
+    - target: {fileID: 6177265802301650603, guid: bcdfb5be9ea2aa24797188d7f54f67ec,
+        type: 3}
+      propertyPath: m_Priority
+      value: 20
+      objectReference: {fileID: 0}
     - target: {fileID: 6177265802301650773, guid: bcdfb5be9ea2aa24797188d7f54f67ec,
         type: 3}
       propertyPath: m_Name
       value: PlayerAimCamera
+      objectReference: {fileID: 0}
+    - target: {fileID: 6177265802301650773, guid: bcdfb5be9ea2aa24797188d7f54f67ec,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: bcdfb5be9ea2aa24797188d7f54f67ec, type: 3}
@@ -1085,8 +1101,28 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6639661015936045948, guid: a5683d50a7f3b7f4ca4acda500693a7c,
         type: 3}
+      propertyPath: _input
+      value: 
+      objectReference: {fileID: 1394060365}
+    - target: {fileID: 6639661015936045948, guid: a5683d50a7f3b7f4ca4acda500693a7c,
+        type: 3}
+      propertyPath: _playerInput
+      value: 
+      objectReference: {fileID: 1394060366}
+    - target: {fileID: 6639661015936045948, guid: a5683d50a7f3b7f4ca4acda500693a7c,
+        type: 3}
       propertyPath: _aimVirtualCam
       value: 
       objectReference: {fileID: 2070925441490461484}
+    - target: {fileID: 6639661015936045948, guid: a5683d50a7f3b7f4ca4acda500693a7c,
+        type: 3}
+      propertyPath: LockCameraPosition
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6639661015936045948, guid: a5683d50a7f3b7f4ca4acda500693a7c,
+        type: 3}
+      propertyPath: CinemachineCameraTarget
+      value: 
+      objectReference: {fileID: 1739777913}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a5683d50a7f3b7f4ca4acda500693a7c, type: 3}
