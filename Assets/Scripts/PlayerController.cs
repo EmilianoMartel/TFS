@@ -53,17 +53,10 @@ public class PlayerController : MonoBehaviour
     [Tooltip("What layers the character uses as ground")]
     public LayerMask GroundLayers;
 
-    [Header("Camera aim Limits")]
-    [SerializeField] private float _minLateralLimit = -45f;
-    [SerializeField] private float _maxLateralLimit = 45f;
-    [SerializeField] private float _bottonClamp = -10;
-    [SerializeField] private float _topClamp = 10;
-
     // player
     private float _speed;
     private float _animationBlend;
     private float _targetRotation = 0.0f;
-    private float _rotationVelocity;
     private float _verticalVelocity;
     private float _terminalVelocity = 53.0f;
     private Quaternion _characterTargetRot;

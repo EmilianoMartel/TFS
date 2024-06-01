@@ -61,7 +61,7 @@ public class Bullet : MonoBehaviour, IHazard
 
         if(other.TryGetComponent<IHealth>(out var hp))
         {
-            hp.TakeDamage(DoDamage());
+            hp.TakeDamage(ReturnDamage());
         }
 
         HandleDie();
@@ -85,5 +85,8 @@ public class Bullet : MonoBehaviour, IHazard
         HandleDie();
     }
 
-    private int DoDamage() { return _damage; }
+    public int ReturnDamage()
+    {
+        return _damage;
+    }
 }

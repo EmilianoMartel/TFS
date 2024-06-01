@@ -102,7 +102,7 @@ public class CamerAimController : MonoBehaviour
         if (_input.aim)
         {
             _cinemachineTargetYaw = ClampAngle(_cinemachineTargetYaw, _originalYaw + _minLateralLimit, _originalYaw + _maxLateralLimit);
-            _cinemachineTargetPitch = ClampAngle(_cinemachineTargetPitch, _originalPitch + BottomClamp, _originalPitch + TopClamp);
+            _cinemachineTargetPitch = ClampAngle(_cinemachineTargetPitch, _originalPitch + _bottonClamp, _originalPitch + _topClamp);
         }
         else
         {
