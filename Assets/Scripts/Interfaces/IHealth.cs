@@ -8,5 +8,5 @@ public interface IHealth
     //This would be use to test the function or cheat
     protected void TakeTotalDamage();
 
-    protected void Dead();
+    public void Dead();
 }
