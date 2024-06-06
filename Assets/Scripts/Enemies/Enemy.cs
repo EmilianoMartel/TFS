@@ -13,27 +13,28 @@ public class Enemy : MonoBehaviour, IHealth, IHazard
     [SerializeField] private BoolChanelSo _startedGame;
 
     [Header("Parameters")]
-    [SerializeField] protected int _maxLifePoints = 10;
-    [SerializeField] protected int _damage = 1;
-    [SerializeField] protected float _waitForDie = 0.5f;
-    [SerializeField] protected float _attackCD = 1.0f;
-    [SerializeField] private float _attackDistance = 2f;
+    [SerializeField] protected int p_maxLifePoints = 10;
+    [SerializeField] protected int p_damage = 1;
+    [SerializeField] protected float p_waitForDie = 0.5f;
+    [SerializeField] protected float p_attackCD = 1.0f;
+    [SerializeField] protected float p_attackDistance = 2f;
 
     private int _currentLifePoints = 0;
-    private bool _isAttacking = false;
+    protected bool p_isAttacking = false;
     
     public event Action onDead;
-    public event Action onAttack;
+    public Action<bool> onAttack;
 
     private void Awake()
     {
-        _currentLifePoints = _maxLifePoints;
+        Validate();
+        _currentLifePoints = p_maxLifePoints;
         p_agent.speed = _speed;
     }
 
-    private void Update()
+    protected virtual void Update()
     {
-        if ((p_target.position - transform.position).magnitude > _attackDistance)
+        if ((p_target.position - transform.position).magnitude > p_attackDistance)
             Move();
         else
             AttackLogic();
@@ -71,21 +72,23 @@ public class Enemy : MonoBehaviour, IHealth, IHazard
 
     protected virtual void AttackLogic()
     {
-        if(!_isAttacking)
+        if(!p_isAttacking)
             StartCoroutine(Attack());
     }
 
     protected virtual IEnumerator Attack()
     {
-        _isAttacking = true;
-        onAttack?.Invoke();
-        yield return new WaitForSeconds(_attackCD);
-        _isAttacking = false;
+        p_isAttacking = true;
+        p_agent.SetDestination(transform.position);
+        onAttack?.Invoke(p_isAttacking);
+        yield return new WaitForSeconds(p_attackCD);
+        p_isAttacking = false;
+        onAttack?.Invoke(p_isAttacking);
     }
 
     public int ReturnDamage()
     {
-        return _damage;
+        return p_damage;
     }
 
     private void Validate()

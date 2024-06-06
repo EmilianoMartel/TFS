@@ -80,7 +80,6 @@ public class CamerAimController : MonoBehaviour
         }
         else
         {
-
             _aimVirtualCam.gameObject.SetActive(false);
             _cinemachineTargetYaw = _originalYaw;
             _cinemachineTargetPitch = _originalPitch;

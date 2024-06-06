@@ -43,11 +43,11 @@ public abstract class Weapon : MonoBehaviour, IPickable
 
     public virtual void OnPick()
     {
-        throw new System.NotImplementedException();
+
     }
 
     public virtual void OnDrop()
     {
-        throw new System.NotImplementedException();
+
     }
 }

@@ -50,13 +50,13 @@ public class Gun : Weapon
         if (_pointShootEvent)
             _pointShootEvent.InvokeEvent(_shootPoint);
 
-        _reloadEvent.Sucription(HandleReload);
+        _reloadEvent?.Sucription(HandleReload);
     }
 
     protected override void OnDisable()
     {
         base.OnDisable();
-        _reloadEvent.Unsuscribe(HandleReload);
+        _reloadEvent?.Unsuscribe(HandleReload);
     }
 
     private void Awake()

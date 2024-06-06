@@ -164,9 +164,7 @@ public class PlayerController : MonoBehaviour
     private void HandleRotateMeshInput(Vector2 look)
     {
         if (_input.aim)
-        {
             return;
-        }
 
         float deltaTimeMultiplier = IsCurrentDeviceMouse ? 1.0f : Time.deltaTime;
 
