@@ -19,11 +19,6 @@ public class Bullet : MonoBehaviour, IHazard
 
     public event Action<bool> onDie = delegate { };
 
-    private void OnEnable()
-    {
-        
-    }
-
     private void OnDisable()
     {
         onDisable?.Invoke(this);
@@ -62,6 +57,7 @@ public class Bullet : MonoBehaviour, IHazard
         if(other.TryGetComponent<IHealth>(out var hp))
         {
             hp.TakeDamage(ReturnDamage());
+            Debug.Log($"{name}: damage to {other.name}");
         }
 
         HandleDie();

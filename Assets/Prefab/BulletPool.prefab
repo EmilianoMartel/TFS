@@ -9,7 +9,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4464789650886742686}
-  - component: {fileID: 4464789650886742685}
   m_Layer: 0
   m_Name: BulletPool
   m_TagString: Untagged
@@ -32,22 +31,3 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &4464789650886742685
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4464789650886742656}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2ce9ba2e3ad716445b84f8fb67459bda, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _bulletPrefab: {fileID: 5744291734354450158, guid: f4dfd305b7805f74cbc78aa0c8817602,
-    type: 3}
-  _pointShoot: {fileID: 0}
-  _speed: 5
-  _debugEnable: 0
-  _shootMomentEvent: {fileID: 11400000, guid: aca6079765761444b9cbd9436a6ec733, type: 2}
-  _pointShootEvent: {fileID: 0}

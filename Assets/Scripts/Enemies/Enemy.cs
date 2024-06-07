@@ -40,7 +40,7 @@ public class Enemy : MonoBehaviour, IHealth, IHazard
             AttackLogic();
     }
 
-    private void Move()
+    protected virtual void Move()
     {
         p_agent.SetDestination(p_target.position);
     }
@@ -67,7 +67,6 @@ public class Enemy : MonoBehaviour, IHealth, IHazard
     public void Dead()
     {
         onDead?.Invoke();
-        throw new System.NotImplementedException();
     }
 
     protected virtual void AttackLogic()

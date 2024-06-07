@@ -5,8 +5,8 @@ using UnityEngine.AI;
 
 public class EnemyViewController : MonoBehaviour
 {
-    [SerializeField] private Enemy _enemy;
-    [SerializeField] private Animator _animetor;
+    [SerializeField] protected Enemy p_enemy;
+    [SerializeField] protected Animator p_animetor;
     [SerializeField] protected NavMeshAgent p_agent;
 
     [Header("Parameters")]
@@ -16,40 +16,42 @@ public class EnemyViewController : MonoBehaviour
 
     private bool _isMoving => p_agent.speed > 0;
 
-    private void OnEnable()
+    protected virtual void OnEnable()
     {
-        _enemy.onAttack += HandleOnAttack;
+        p_enemy.onAttack += HandleOnAttack;
+        p_enemy.onDead += HandleOnDie;
     }
 
-    private void OnDisable()
+    protected virtual void OnDisable()
     {
-        _enemy.onAttack -= HandleOnAttack;
+        p_enemy.onAttack -= HandleOnAttack;
+        p_enemy.onDead -= HandleOnDie;
     }
 
-    private void Update()
+    protected virtual void Update()
     {
         HandleOnMove(_isMoving);
     }
 
     private void HandleOnMove(bool isMoving)
     {
-        _animetor.SetBool(_isMovingParameter, isMoving);
+        p_animetor.SetBool(_isMovingParameter, isMoving);
     }
 
     private void HandleOnAttack(bool isAttacking)
     {
-        _animetor.SetBool(_isAttackingParameter, isAttacking);
+        p_animetor.SetBool(_isAttackingParameter, isAttacking);
     }
 
     private void HandleOnDie()
     {
-        _animetor.SetBool(_isDyingParameter, true);
+        p_animetor.SetBool(_isDyingParameter, true);
     }
 
     private IEnumerator DieAnimation()
     {
         yield return new WaitForSeconds(0.5f);
-        _animetor.SetBool(_isDyingParameter, false);
+        p_animetor.SetBool(_isDyingParameter, false);
     }
 
     private void Validate()
@@ -60,13 +62,13 @@ public class EnemyViewController : MonoBehaviour
             enabled = false;
             return;
         }
-        if (!_enemy)
+        if (!p_enemy)
         {
             Debug.LogError($"{name}: Enemy is null.\nCheck and assigned one.\nDisabling component.");
             enabled = false;
             return;
         }
-        if (!_animetor)
+        if (!p_animetor)
         {
             Debug.LogError($"{name}: Animator is null.\nCheck and assigned one.\nDisabling component.");
             enabled = false;
