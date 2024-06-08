@@ -6,7 +6,7 @@ using UnityEngine.AI;
 
 public class Enemy : MonoBehaviour, IHealth, IHazard
 {
-    [SerializeField] private int _speed;
+    [SerializeField] protected int p_speed;
     [SerializeField] protected NavMeshAgent p_agent;
     [SerializeField] protected Transform p_target;
     [SerializeField] protected Canvas p_lifeView;
@@ -21,7 +21,8 @@ public class Enemy : MonoBehaviour, IHealth, IHazard
 
     private int _currentLifePoints = 0;
     protected bool p_isAttacking = false;
-    
+
+    public event Action<float> lifeChange;
     public event Action onDead;
     public Action<bool> onAttack;
 
@@ -29,7 +30,7 @@ public class Enemy : MonoBehaviour, IHealth, IHazard
     {
         Validate();
         _currentLifePoints = p_maxLifePoints;
-        p_agent.speed = _speed;
+        p_agent.speed = p_speed;
     }
 
     protected virtual void Update()
@@ -49,7 +50,12 @@ public class Enemy : MonoBehaviour, IHealth, IHazard
     {
         _currentLifePoints -= damage;
         if (_currentLifePoints <= 0)
+        {
             Dead();
+            _currentLifePoints = 0;
+        }
+
+        lifeChange?.Invoke((float)_currentLifePoints / p_maxLifePoints);
     }
 
     [ContextMenu("Basic Damage")]
@@ -67,6 +73,13 @@ public class Enemy : MonoBehaviour, IHealth, IHazard
     public void Dead()
     {
         onDead?.Invoke();
+        StartCoroutine(WaitForDeath());
+    }
+
+    private IEnumerator WaitForDeath()
+    {
+        yield return new WaitForSeconds(1f);
+        gameObject.SetActive(false);
     }
 
     protected virtual void AttackLogic()

@@ -14,6 +14,7 @@ public class Bullet : MonoBehaviour, IHazard
     [SerializeField] private ParticleSystem _impactSystem;
     [SerializeField] private IObjectPool<TrailRenderer> _trailPool;
 
+    [SerializeField] private bool _enabledDebug = false;
     private Rigidbody _rigidbody;
     public Action<Bullet> onDisable;
 
@@ -38,7 +39,7 @@ public class Bullet : MonoBehaviour, IHazard
         }
     }
 
-    public void Shoot(Vector3 Position, Vector3 Direction, float Speed)
+    public virtual void Shoot(Vector3 Position, Vector3 Direction, float Speed)
     {
         ActiveBullet();
         _rigidbody.velocity = Vector3.zero;
@@ -57,7 +58,7 @@ public class Bullet : MonoBehaviour, IHazard
         if(other.TryGetComponent<IHealth>(out var hp))
         {
             hp.TakeDamage(ReturnDamage());
-            Debug.Log($"{name}: damage to {other.name}");
+            if(_enabledDebug) Debug.Log($"{name}: damage to {other.name}");
         }
 
         HandleDie();
