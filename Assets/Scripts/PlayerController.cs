@@ -1,4 +1,5 @@
 using StarterAssets;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -96,6 +97,11 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    public event Action<bool> onGround;
+    public event Action<float> inputMagnitudeEvent;
+    public event Action<float, float> onMovement;
+    public event Action<bool> isFiring;
+
     private void Awake()
     {
         // get a reference to our main camera
@@ -153,11 +159,7 @@ public class PlayerController : MonoBehaviour
         Grounded = Physics.CheckSphere(spherePosition, GroundedRadius, GroundLayers,
             QueryTriggerInteraction.Ignore);
 
-        // update animator if using character
-        if (_hasAnimator)
-        {
-            _animator.SetBool(_animIDGrounded, Grounded);
-        }
+        onGround?.Invoke(Grounded);
     }
 
     //TO-DO
@@ -190,18 +192,13 @@ public class PlayerController : MonoBehaviour
                          new Vector3(0.0f, _verticalVelocity, 0.0f) * Time.deltaTime);
 
         float inputMagnitude = _input.analogMovement ? _input.move.magnitude : 1f;
-        // update animator if using character
-        if (_hasAnimator)
-        {
-            _animator.SetFloat(_animIDSpeed, _animationBlend);
-            _animator.SetFloat(_animIDMotionSpeed, inputMagnitude);
-        }
 
         //TO-DO
         var xSpeed = _input.move.x * targetSpeed;
         var ySpeed = _input.move.y * targetSpeed;
-        _animator.SetFloat("xSpeed", xSpeed);
-        _animator.SetFloat("zSpeed", ySpeed);
+
+        inputMagnitudeEvent?.Invoke(inputMagnitude);
+        onMovement?.Invoke(xSpeed,ySpeed);
     }
 
     //TO-DO: Hacer esto bien
@@ -299,7 +296,7 @@ public class PlayerController : MonoBehaviour
         {
             if (FootstepAudioClips.Length > 0)
             {
-                var index = Random.Range(0, FootstepAudioClips.Length);
+                var index = UnityEngine.Random.Range(0, FootstepAudioClips.Length);
                 AudioSource.PlayClipAtPoint(FootstepAudioClips[index], transform.TransformPoint(_controller.center), FootstepAudioVolume);
             }
         }

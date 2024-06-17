@@ -1,7 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using UnityEngine;
+using UnityEngine.Windows;
 
+[RequireComponent(typeof(Animator))]
 public class PlayerAnimation : MonoBehaviour
 {
     [SerializeField] private PlayerController _controller;
@@ -13,6 +16,10 @@ public class PlayerAnimation : MonoBehaviour
     [SerializeField] private string _freeFall = "FreeFall";
     [SerializeField] private string _motionSpeed = "MotionSpeed";
     [SerializeField] private string _fire = "Fire";
+    [SerializeField] private string _xSpeed = "xSpeed";
+    [SerializeField] private string _ySpeed = "ySpeed";
+
+    private Animator _animator;
 
     // animation IDs
     private int _animIDSpeed;
@@ -21,6 +28,29 @@ public class PlayerAnimation : MonoBehaviour
     private int _animIDFreeFall;
     private int _animIDMotionSpeed;
     private int _animIDFire;
+    private int _animXSpeed;
+    private int _animYSpeed;
+
+    private void OnEnable()
+    {
+        _controller.inputMagnitudeEvent += HanldeMovementSpeed;
+        _controller.onMovement += HandleMovement;
+        _controller.isFiring += HandleFire;
+        _controller.onGround += HandleGrounded;
+    }
+
+    private void OnDisable()
+    {
+        _controller.inputMagnitudeEvent -= HanldeMovementSpeed;
+        _controller.onMovement -= HandleMovement;
+        _controller.isFiring -= HandleFire;
+        _controller.onGround -= HandleGrounded;
+    }
+
+    private void Awake()
+    {
+        _animator = GetComponent<Animator>();
+    }
 
     private void Start()
     {
@@ -35,5 +65,43 @@ public class PlayerAnimation : MonoBehaviour
         _animIDFreeFall = Animator.StringToHash(_freeFall);
         _animIDMotionSpeed = Animator.StringToHash(_motionSpeed);
         _animIDFire = Animator.StringToHash(_fire);
+        _animXSpeed = Animator.StringToHash(_xSpeed);
+        _animYSpeed = Animator.StringToHash(_ySpeed);
+    }
+
+    private void HandleGrounded(bool grounded)
+    {
+        _animator.SetBool(_animIDGrounded, grounded);
+    }
+
+    private void HandleAdminSpeed(float animSpeed)
+    {
+        _animator.SetFloat(_animIDSpeed, animSpeed);
+    }
+
+    private void HanldeMovementSpeed(float inputMagnitude)
+    {
+        _animator.SetFloat(_animIDMotionSpeed, inputMagnitude);
+    }
+
+    private void HandleMovement(float xSpeed, float ySpeed)
+    {
+        _animator.SetFloat(_animXSpeed, xSpeed);
+        _animator.SetFloat(_animYSpeed, ySpeed);
+    }
+
+    private void HandleFire(bool fire)
+    {
+        _animator.SetBool(_animIDFire, fire);
+    }
+
+    private void HandleJump(bool jump)
+    {
+        _animator.SetBool(_animIDJump, jump);
+    }
+
+    private void HandleFalling(bool fall)
+    {
+        _animator.SetBool(_animIDFreeFall, fall);
     }
 }

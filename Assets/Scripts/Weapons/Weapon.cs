@@ -3,11 +3,21 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
+public enum WeaponType
+{
+    Meele,
+    Rifle,
+    Pistol
+}
+
 public abstract class Weapon : MonoBehaviour, IPickable
 {
     [Header("Weapon Parameters")]
     [SerializeField] protected int p_damage;
     [SerializeField] protected LayerMask p_enemyMask;
+    [SerializeField] protected WeaponType p_type;
+    [SerializeField] protected Transform p_pointAttack;
+    [SerializeField] protected int p_attackDistance = 3;
 
     [Header("Channels")]
     [SerializeField] protected BoolChanelSo p_isTriggerEvent;

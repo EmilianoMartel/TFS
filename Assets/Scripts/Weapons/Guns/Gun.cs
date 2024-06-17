@@ -24,7 +24,6 @@ public class Gun : Weapon
     [Header("Optional parameters")]
     [SerializeField] private RecoilSO _recoilData;
 
-    private bool _isPressTrigger;
     private bool _isShooting = false;
     private bool _canShoot = true;
     private bool _isReloaded;
@@ -80,7 +79,7 @@ public class Gun : Weapon
 
     private void Update()
     {
-        if (_isPressTrigger && !_isShooting && _canShoot && _ammoLeft > 0 && !_isReloaded)
+        if (p_isPressTrigger && !_isShooting && _canShoot && _ammoLeft > 0 && !_isReloaded)
         {
             StartCoroutine(Shoot());
         }
@@ -92,7 +91,7 @@ public class Gun : Weapon
 
     protected override void HandleSetPressTrigger(bool pressTrigger)
     {
-        _isPressTrigger = pressTrigger;
+        p_isPressTrigger = pressTrigger;
         if (!_isAutomatic && !pressTrigger)
         {
             _canShoot = true;
