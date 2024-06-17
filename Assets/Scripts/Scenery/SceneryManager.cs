@@ -21,7 +21,7 @@ public class SceneryManager : MonoBehaviour
     private void OnEnable()
     {
         if (_sceneryManagerDataSource != null)
-            _sceneryManagerDataSource.DataInstance = this;
+            _sceneryManagerDataSource.Reference = this;
     }
 
     private void Start()
@@ -32,9 +32,9 @@ public class SceneryManager : MonoBehaviour
 
     private void OnDisable()
     {
-        if (_sceneryManagerDataSource != null && _sceneryManagerDataSource.DataInstance == this)
+        if (_sceneryManagerDataSource != null && _sceneryManagerDataSource.Reference == this)
         {
-            _sceneryManagerDataSource.DataInstance = null;
+            _sceneryManagerDataSource.Reference = null;
         }
     }
 
