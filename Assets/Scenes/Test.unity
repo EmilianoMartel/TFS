@@ -3660,7 +3660,7 @@ MonoBehaviour:
   _motionSpeed: MotionSpeed
   _fire: Fire
   _xSpeed: xSpeed
-  _ySpeed: ySpeed
+  _ySpeed: zSpeed
 --- !u!95 &793694194
 Animator:
   serializedVersion: 5
@@ -5883,7 +5883,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 771323933}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 46fc4ca08f6206349b5251becab6610d, type: 3}
   m_Name: 

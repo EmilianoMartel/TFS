@@ -51,8 +51,10 @@ public class SceneryManager : MonoBehaviour
 
     public void ChangeLevel(SceneLevel level)
     {
-        List<SceneLevel> levels = new();
-        levels.Add(level);
+        List<SceneLevel> levels = new()
+        {
+            level
+        };
         StartCoroutine(ChangeLevel(_currentLevel, levels));
     }
 

@@ -76,12 +76,9 @@ public class PlayerController : MonoBehaviour
 #if ENABLE_INPUT_SYSTEM
     [SerializeField] private PlayerInput _playerInput;
 #endif
-    private Animator _animator;
     private CharacterController _controller;
     [SerializeField] private StarterAssetsInputs _input;
     private GameObject _mainCamera;
-
-    private bool _hasAnimator;
 
     [SerializeField] private BoolChanelSo _aimEvent;
 
@@ -113,7 +110,6 @@ public class PlayerController : MonoBehaviour
 
     private void Start()
     {
-        _hasAnimator = TryGetComponent(out _animator);
         _controller = GetComponent<CharacterController>();
         //_input = GetComponent<StarterAssetsInputs>();
 #if ENABLE_INPUT_SYSTEM
@@ -121,8 +117,6 @@ public class PlayerController : MonoBehaviour
 #else
 			Debug.LogError( "Starter Assets package is missing dependencies. Please use Tools/Starter Assets/Reinstall Dependencies to fix it");
 #endif
-
-        AssignAnimationIDs();
 
         // reset our timeouts on start
         _jumpTimeoutDelta = JumpTimeout;
@@ -133,22 +127,10 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
-        _hasAnimator = TryGetComponent(out _animator);
-
         JumpAndGravity();
         GroundedCheck();
         HandleRotateMeshInput(_input.look);
         Move();
-        Fire();
-    }
-
-    private void AssignAnimationIDs()
-    {
-        _animIDSpeed = Animator.StringToHash("Speed");
-        _animIDGrounded = Animator.StringToHash("Grounded");
-        _animIDJump = Animator.StringToHash("Jump");
-        _animIDFreeFall = Animator.StringToHash("FreeFall");
-        _animIDMotionSpeed = Animator.StringToHash("MotionSpeed");
     }
 
     private void GroundedCheck()
@@ -198,13 +180,7 @@ public class PlayerController : MonoBehaviour
         var ySpeed = _input.move.y * targetSpeed;
 
         inputMagnitudeEvent?.Invoke(inputMagnitude);
-        onMovement?.Invoke(xSpeed,ySpeed);
-    }
-
-    //TO-DO: Hacer esto bien
-    private void Fire()
-    {
-        _animator.SetBool("Fire", _input.fire);
+        onMovement?.Invoke(xSpeed, ySpeed);
     }
 
     private void JumpAndGravity()
@@ -213,13 +189,6 @@ public class PlayerController : MonoBehaviour
         {
             // reset the fall timeout timer
             _fallTimeoutDelta = FallTimeout;
-
-            // update animator if using character
-            if (_hasAnimator)
-            {
-                _animator.SetBool(_animIDJump, false);
-                _animator.SetBool(_animIDFreeFall, false);
-            }
 
             // stop our velocity dropping infinitely when grounded
             if (_verticalVelocity < 0.0f)
@@ -233,46 +202,37 @@ public class PlayerController : MonoBehaviour
                 // the square root of H * -2 * G = how much velocity needed to reach desired height
                 _verticalVelocity = Mathf.Sqrt(JumpHeight * -2f * Gravity);
 
-                // update animator if using character
-                if (_hasAnimator)
+
+                // jump timeout
+                if (_jumpTimeoutDelta >= 0.0f)
                 {
-                    _animator.SetBool(_animIDJump, true);
+                    _jumpTimeoutDelta -= Time.deltaTime;
                 }
-            }
-
-            // jump timeout
-            if (_jumpTimeoutDelta >= 0.0f)
-            {
-                _jumpTimeoutDelta -= Time.deltaTime;
-            }
-        }
-        else
-        {
-            // reset the jump timeout timer
-            _jumpTimeoutDelta = JumpTimeout;
-
-            // fall timeout
-            if (_fallTimeoutDelta >= 0.0f)
-            {
-                _fallTimeoutDelta -= Time.deltaTime;
             }
             else
             {
-                // update animator if using character
-                if (_hasAnimator)
+                // reset the jump timeout timer
+                _jumpTimeoutDelta = JumpTimeout;
+
+                // fall timeout
+                if (_fallTimeoutDelta >= 0.0f)
                 {
-                    _animator.SetBool(_animIDFreeFall, true);
+                    _fallTimeoutDelta -= Time.deltaTime;
                 }
+                else
+                {
+
+                }
+
+                // if we are not grounded, do not jump
+                _input.jump = false;
             }
 
-            // if we are not grounded, do not jump
-            _input.jump = false;
-        }
-
-        // apply gravity over time if under terminal (multiply by delta time twice to linearly speed up over time)
-        if (_verticalVelocity < _terminalVelocity)
-        {
-            _verticalVelocity += Gravity * Time.deltaTime;
+            // apply gravity over time if under terminal (multiply by delta time twice to linearly speed up over time)
+            if (_verticalVelocity < _terminalVelocity)
+            {
+                _verticalVelocity += Gravity * Time.deltaTime;
+            }
         }
     }
 
