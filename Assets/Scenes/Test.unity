@@ -2176,12 +2176,6 @@ Transform:
   m_Father: {fileID: 1254691576}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!4 &476692865 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 2994908981097411667, guid: b9ea536d4ee368f4481df036019b382f,
-    type: 3}
-  m_PrefabInstance: {fileID: 823442220667841100}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &485998173
 GameObject:
   m_ObjectHideFlags: 0
@@ -5876,21 +5870,6 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 823442220667841100}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1493499292
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 771323933}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 46fc4ca08f6206349b5251becab6610d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _bone: {fileID: 476692865}
-  _angle: 45
-  _fireEvent: {fileID: 11400000, guid: 4b6be731c33d33543891ed065a132b47, type: 2}
 --- !u!136 &1493499297
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -13191,6 +13170,11 @@ PrefabInstance:
         type: 2}
     - target: {fileID: 6213687455335488688, guid: b9ea536d4ee368f4481df036019b382f,
         type: 3}
+      propertyPath: JumpHeight
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6213687455335488688, guid: b9ea536d4ee368f4481df036019b382f,
+        type: 3}
       propertyPath: SprintSpeed
       value: 10
       objectReference: {fileID: 0}
@@ -13527,6 +13511,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: InputReader
+      objectReference: {fileID: 0}
+    - target: {fileID: 6639661015936045921, guid: a5683d50a7f3b7f4ca4acda500693a7c,
+        type: 3}
+      propertyPath: jump
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6639661015936045923, guid: a5683d50a7f3b7f4ca4acda500693a7c,
         type: 3}

@@ -131,6 +131,7 @@ public class PlayerController : MonoBehaviour
         GroundedCheck();
         HandleRotateMeshInput(_input.look);
         Move();
+        isFiring?.Invoke(_input.fire);
     }
 
     private void GroundedCheck()
