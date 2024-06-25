@@ -24,6 +24,11 @@ public class SceneryManager : MonoBehaviour
             _sceneryManagerDataSource.Reference = this;
     }
 
+    private void Awake()
+    {
+        ValidateReference();
+    }
+
     private void Start()
     {
         //Load default level
@@ -63,17 +68,23 @@ public class SceneryManager : MonoBehaviour
         onLoading?.Invoke();
         var unloadCount = 0;
         onLoadPercentage?.Invoke(0);
-        for (int i = 0; i < currentLevel.Count; i++)
+        if(currentLevel != null)
         {
-            if (currentLevel[i].IsUnloadable)
-                unloadCount++;
+            for (int i = 0; i < currentLevel.Count; i++)
+            {
+                if (currentLevel[i].IsUnloadable)
+                    unloadCount++;
+            }
         }
 
         var loadCount = newLevel.Count;
         var total = unloadCount + loadCount;
         yield return new WaitForSeconds(2);
-        yield return Unload(currentLevel,
+        if(currentLevel != null)
+        {
+            yield return Unload(currentLevel,
             currentIndex => onLoadPercentage?.Invoke((float)currentIndex / total));
+        }
         yield return new WaitForSeconds(2);
         yield return Load(newLevel,
             currentIndex => onLoadPercentage?.Invoke((float)(currentIndex + unloadCount) / total));

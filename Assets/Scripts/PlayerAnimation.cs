@@ -18,7 +18,10 @@ public class PlayerAnimation : MonoBehaviour
     [SerializeField] private string _fire = "Fire";
     [SerializeField] private string _xSpeed = "xSpeed";
     [SerializeField] private string _ySpeed = "ySpeed";
+    [SerializeField] private string _isMeele = "isMeele";
 
+    [Header("Events")]
+    [SerializeField] protected WeaponTypeChannel _typeEvent;
     private Animator _animator;
 
     // animation IDs
@@ -37,6 +40,7 @@ public class PlayerAnimation : MonoBehaviour
         _controller.onMovement += HandleMovement;
         _controller.isFiring += HandleFire;
         _controller.onGround += HandleGrounded;
+        _typeEvent?.Sucription(HandleWeaponType);
     }
 
     private void OnDisable()
@@ -45,6 +49,7 @@ public class PlayerAnimation : MonoBehaviour
         _controller.onMovement -= HandleMovement;
         _controller.isFiring -= HandleFire;
         _controller.onGround -= HandleGrounded;
+        _typeEvent?.Unsuscribe(HandleWeaponType);
     }
 
     private void Awake()
@@ -103,5 +108,13 @@ public class PlayerAnimation : MonoBehaviour
     private void HandleFalling(bool fall)
     {
         _animator.SetBool(_animIDFreeFall, fall);
+    }
+
+    private void HandleWeaponType(WeaponType type)
+    {
+        if(type == WeaponType.Meele)
+            _animator.SetBool(_isMeele, true);
+        else
+            _animator.SetBool(_isMeele, false);
     }
 }

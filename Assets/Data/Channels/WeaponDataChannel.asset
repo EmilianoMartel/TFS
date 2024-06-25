@@ -9,8 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1a7e0b9ebc888864797ab69cb052088b, type: 3}
-  m_Name: actualAmmo
+  m_Script: {fileID: 11500000, guid: 51fc011baffe2574886261616bb83b60, type: 3}
+  m_Name: WeaponDataChannel
   m_EditorClassIdentifier: 
   _config:
     <listenerEvent>k__BackingField: 0

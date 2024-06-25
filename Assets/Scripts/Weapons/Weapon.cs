@@ -21,6 +21,7 @@ public abstract class Weapon : MonoBehaviour, IPickable
 
     [Header("Channels")]
     [SerializeField] protected BoolChanelSo p_isTriggerEvent;
+    [SerializeField] protected WeaponTypeChannel typeEvent;
 
     protected bool  p_isPressTrigger;
 
@@ -28,12 +29,19 @@ public abstract class Weapon : MonoBehaviour, IPickable
     {
         if (p_isTriggerEvent)
             p_isTriggerEvent.Sucription(HandleSetPressTrigger);
+
+        typeEvent?.InvokeEvent(p_type);
     }
 
     protected virtual void OnDisable()
     {
         if(p_isTriggerEvent)
             p_isTriggerEvent.Unsuscribe(HandleSetPressTrigger);
+    }
+
+    protected virtual void Start()
+    {
+        typeEvent?.InvokeEvent(p_type);
     }
 
     /// <summary>

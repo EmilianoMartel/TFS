@@ -884,8 +884,9 @@ MonoBehaviour:
     m_Bits: 128
   p_type: 0
   p_pointAttack: {fileID: 575698622}
-  p_attackDistance: 3
+  p_attackDistance: 10
   p_isTriggerEvent: {fileID: 11400000, guid: 4b6be731c33d33543891ed065a132b47, type: 2}
+  typeEvent: {fileID: 11400000, guid: ff1eeb48a11ba774e8e7948e59370e82, type: 2}
   _attackCd: 1
 --- !u!1 &165054475
 GameObject:
@@ -1098,6 +1099,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 353ad6e69f9b18a4aacafd4dcd05c67b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _weapon1: {fileID: 823442220667841101}
+  _weapon2: {fileID: 749171589}
+  _weapon1Event: {fileID: 11400000, guid: a2f8aedbf925d734685c4bbcdfad3e9f, type: 2}
+  _weapon2Event: {fileID: 11400000, guid: 9d5545ca8e543304d9fede6e8d48d3b1, type: 2}
 --- !u!65 &196925573
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2496,7 +2501,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 575698621}
   m_LocalRotation: {x: -0.5792133, y: -0.37290007, z: -0.4429848, w: -0.5737787}
-  m_LocalPosition: {x: 0.008473873, y: 1.1334703, z: 1.101}
+  m_LocalPosition: {x: -0.038, y: 1.295, z: 0.547}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -3655,6 +3660,8 @@ MonoBehaviour:
   _fire: Fire
   _xSpeed: xSpeed
   _ySpeed: zSpeed
+  _isMeele: isMeele
+  _typeEvent: {fileID: 11400000, guid: ff1eeb48a11ba774e8e7948e59370e82, type: 2}
 --- !u!95 &793694194
 Animator:
   serializedVersion: 5
@@ -11064,6 +11071,7 @@ MonoBehaviour:
   p_pointAttack: {fileID: 0}
   p_attackDistance: 3
   p_isTriggerEvent: {fileID: 0}
+  typeEvent: {fileID: 0}
   _shootDistance: 10
   _shootPoint: {fileID: 1834257602}
   _isAutomatic: 1
@@ -13028,6 +13036,29 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 823442220169988108, guid: b9ea536d4ee368f4481df036019b382f,
         type: 3}
+      propertyPath: p_type
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 823442220169988108, guid: b9ea536d4ee368f4481df036019b382f,
+        type: 3}
+      propertyPath: typeEvent
+      value: 
+      objectReference: {fileID: 11400000, guid: ff1eeb48a11ba774e8e7948e59370e82,
+        type: 2}
+    - target: {fileID: 823442220169988108, guid: b9ea536d4ee368f4481df036019b382f,
+        type: 3}
+      propertyPath: _maxAmmoEvent
+      value: 
+      objectReference: {fileID: 11400000, guid: f5bf1647e6bc31745aec5927a2888ec8,
+        type: 2}
+    - target: {fileID: 823442220169988108, guid: b9ea536d4ee368f4481df036019b382f,
+        type: 3}
+      propertyPath: _actualAmmoEvent
+      value: 
+      objectReference: {fileID: 11400000, guid: 381b471e3540860498d80712a5e5d659,
+        type: 2}
+    - target: {fileID: 823442220169988108, guid: b9ea536d4ee368f4481df036019b382f,
+        type: 3}
       propertyPath: _pointShootEvent
       value: 
       objectReference: {fileID: 11400000, guid: 416112a9dd20b3a439877121d81c652f,
@@ -13150,7 +13181,7 @@ PrefabInstance:
     - target: {fileID: 5072697744446319521, guid: b9ea536d4ee368f4481df036019b382f,
         type: 3}
       propertyPath: m_RootOrder
-      value: 4
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 6213687455335488688, guid: b9ea536d4ee368f4481df036019b382f,
         type: 3}
@@ -13186,6 +13217,12 @@ PrefabInstance:
     m_RemovedComponents:
     - {fileID: 6487402276173276367, guid: b9ea536d4ee368f4481df036019b382f, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: b9ea536d4ee368f4481df036019b382f, type: 3}
+--- !u!1 &823442220667841101 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 823442220516507600, guid: b9ea536d4ee368f4481df036019b382f,
+    type: 3}
+  m_PrefabInstance: {fileID: 823442220667841100}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &2070925441490461484 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 6177265802301650603, guid: bcdfb5be9ea2aa24797188d7f54f67ec,
@@ -13517,6 +13554,18 @@ PrefabInstance:
       propertyPath: jump
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6639661015936045921, guid: a5683d50a7f3b7f4ca4acda500693a7c,
+        type: 3}
+      propertyPath: _weapon1
+      value: 
+      objectReference: {fileID: 11400000, guid: a2f8aedbf925d734685c4bbcdfad3e9f,
+        type: 2}
+    - target: {fileID: 6639661015936045921, guid: a5683d50a7f3b7f4ca4acda500693a7c,
+        type: 3}
+      propertyPath: _weapon2
+      value: 
+      objectReference: {fileID: 11400000, guid: 9d5545ca8e543304d9fede6e8d48d3b1,
+        type: 2}
     - target: {fileID: 6639661015936045923, guid: a5683d50a7f3b7f4ca4acda500693a7c,
         type: 3}
       propertyPath: m_RootOrder

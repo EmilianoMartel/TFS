@@ -33,11 +33,11 @@ public class Gun : Weapon
 
     [Header("Channels")]
     [SerializeField] private EmptyAction _shootEvent;
-    [SerializeField] private ActionChanel<bool> _viewEnemy;
-    [SerializeField] private ActionChanel<int> _actualAmmoEvent;
-    [SerializeField] private ActionChanel<int> _maxAmmoEvent;
-    [SerializeField] private ActionChanel<Transform> _pointShootEvent;
-    [SerializeField] private ActionChanel<int> _damageValueEvent;
+    [SerializeField] private BoolChanelSo _viewEnemy;
+    [SerializeField] private IntChannel _actualAmmoEvent;
+    [SerializeField] private IntChannel _maxAmmoEvent;
+    [SerializeField] private TransformChannelSo _pointShootEvent;
+    [SerializeField] private IntChannel _damageValueEvent;
     [SerializeField] private EmptyAction _reloadEvent;
 
     protected override void OnEnable()
@@ -48,6 +48,9 @@ public class Gun : Weapon
 
         if (_pointShootEvent)
             _pointShootEvent.InvokeEvent(_shootPoint);
+
+        if (_actualAmmoEvent)
+            _actualAmmoEvent.InvokeEvent(_ammoLeft);
 
         _reloadEvent?.Sucription(HandleReload);
     }
@@ -68,8 +71,10 @@ public class Gun : Weapon
         _ammoLeft = _maxAmmo;
     }
 
-    private void Start()
+    protected override void Start()
     {
+        base.Start();
+
         if (_maxAmmoEvent)
             _maxAmmoEvent.InvokeEvent(_maxAmmo);
 

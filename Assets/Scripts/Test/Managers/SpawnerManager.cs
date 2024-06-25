@@ -7,7 +7,7 @@ public class SpawnerManager : MonoBehaviour
 {
     [SerializeField] private int _waveTime = 10;
     [SerializeField] private int _enemyPerWave = 10;
-    //[SerializeField] private Generator _generatorLife;
+    [SerializeField] private Generator _generatorLife;
     [SerializeField] private Transform _generatorPosition;
     [SerializeField] private List<SpawnEnemiesController> _spawnList = new List<SpawnEnemiesController>();
     [SerializeField] private float _timeBetweenSpawns = 1;
@@ -21,12 +21,12 @@ public class SpawnerManager : MonoBehaviour
 
     private void OnEnable()
     {
-        //_generatorLife.dead += HandleGeneratorDie;
+        _generatorLife.dead += HandleGeneratorDie;
     }
 
     private void OnDisable()
     {
-        //_generatorLife.dead -= HandleGeneratorDie;
+        _generatorLife.dead -= HandleGeneratorDie;
     }
 
     private void Awake()

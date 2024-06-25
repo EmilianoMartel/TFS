@@ -28,6 +28,8 @@ namespace StarterAssets
         [SerializeField] private BoolChanelSo _isTriggerEvent;
 		[SerializeField] private EmptyAction _onReloadEvent;
 		[SerializeField] private BoolChanelSo _aimEvent;
+		[SerializeField] private EmptyAction _weapon1;
+        [SerializeField] private EmptyAction _weapon2;
 
 #if ENABLE_INPUT_SYSTEM
         public void OnMove(InputValue value)
@@ -68,6 +70,18 @@ namespace StarterAssets
 			if(value.isPressed)
 				ReloadInput();
         }
+
+		public void OnWeapon1(InputValue value)
+		{
+            if (value.isPressed)
+                Weapon1Input();
+        }
+
+        public void OnWeapon2(InputValue value)
+        {
+            if (value.isPressed)
+                Weapon2Input();
+        }
 #endif
 
 
@@ -107,8 +121,17 @@ namespace StarterAssets
 		{
             _onReloadEvent?.InvokeEvent();
         }
-        
-		private void OnApplicationFocus(bool hasFocus)
+
+        public void Weapon1Input()
+        {
+            _weapon1?.InvokeEvent();
+        }
+        public void Weapon2Input()
+        {
+            _weapon2?.InvokeEvent();
+        }
+
+        private void OnApplicationFocus(bool hasFocus)
 		{
 			SetCursorState(cursorLocked);
 		}
