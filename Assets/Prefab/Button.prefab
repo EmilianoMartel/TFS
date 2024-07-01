@@ -271,3 +271,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   text: {fileID: 7155143719862007509}
+  gameManagerDataSource: {fileID: 11400000, guid: d35d0c7b24197e5449c97b66f2ff1036,
+    type: 2}

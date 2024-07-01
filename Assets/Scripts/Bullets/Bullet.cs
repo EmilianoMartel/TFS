@@ -15,7 +15,7 @@ public class Bullet : MonoBehaviour, IHazard
     [SerializeField] private IObjectPool<TrailRenderer> _trailPool;
 
     [SerializeField] private bool _enabledDebug = false;
-    private Rigidbody _rigidbody;
+    [SerializeField] protected Rigidbody p_rigidbody;
     public Action<Bullet> onDisable;
 
     public event Action<bool> onDie = delegate { };
@@ -29,7 +29,7 @@ public class Bullet : MonoBehaviour, IHazard
     {
         if (gameObject.TryGetComponent<Rigidbody>(out Rigidbody rb))
         {
-            _rigidbody = rb;
+            p_rigidbody = rb;
         }
         else
         {
@@ -42,18 +42,23 @@ public class Bullet : MonoBehaviour, IHazard
     public virtual void Shoot(Vector3 Position, Vector3 Direction, float Speed)
     {
         ActiveBullet();
-        _rigidbody.velocity = Vector3.zero;
+        p_rigidbody.velocity = Vector3.zero;
         transform.position = Position;
         transform.forward = Direction;
 
-        _rigidbody.AddForce(Direction * Speed, ForceMode.VelocityChange);
+        p_rigidbody.AddForce(Direction * Speed, ForceMode.VelocityChange);
+        StartCoroutine(WaitForDieLogic());
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        _impactSystem.transform.forward = -1 * transform.forward;
-        _impactSystem.Play();
-        _rigidbody.velocity = Vector3.zero;
+        if(_impactSystem  != null)
+        {
+            _impactSystem.transform.forward = -1 * transform.forward;
+            _impactSystem.Play();
+        }
+        
+        p_rigidbody.velocity = Vector3.zero;
 
         if(other.TryGetComponent<IHealth>(out var hp))
         {
@@ -66,14 +71,13 @@ public class Bullet : MonoBehaviour, IHazard
 
     private void HandleDie()
     {
-        _rigidbody.AddForce(Vector3.zero,ForceMode.Force);
+        p_rigidbody.AddForce(Vector3.zero,ForceMode.Force);
         gameObject.SetActive(false);
     }
 
     private void ActiveBullet()
     {
-        gameObject.SetActive(true);
-        StartCoroutine(WaitForDieLogic());
+        this.gameObject.SetActive(true);
     }
 
     private IEnumerator WaitForDieLogic()

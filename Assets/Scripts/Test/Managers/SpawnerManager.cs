@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,17 +7,16 @@ using UnityEngine.SceneManagement;
 public class SpawnerManager : MonoBehaviour
 {
     [SerializeField] private int _waveTime = 10;
+    [SerializeField] private int _waveCount;
     [SerializeField] private int _enemyPerWave = 10;
     [SerializeField] private Generator _generatorLife;
     [SerializeField] private Transform _generatorPosition;
     [SerializeField] private List<SpawnEnemiesController> _spawnList = new List<SpawnEnemiesController>();
+    [SerializeField] private DataSource<GameManager> _gameManagerDataSource;
     [SerializeField] private float _timeBetweenSpawns = 1;
-    [Header("GameOver data")]
-    [SerializeField] private BoolDataSO _winData;
-    [SerializeField] private StringChannel _menuNameEvent;
-    [SerializeField] private BoolChanelSo _startedGame;
-    [SerializeField] private string _finalSceneName = "FinalScene";
-    //private List<Enemy> _enemyList = new();
+
+    private List<Enemy> _enemyList = new();
+    private int _actualWave = 0;
     private int _enemiesDie = 0;
 
     private void OnEnable()
@@ -41,7 +41,8 @@ public class SpawnerManager : MonoBehaviour
 
     private IEnumerator WaveStart()
     {
-        yield return new WaitForSeconds( _waveTime );
+        _actualWave++;
+        yield return new WaitForSeconds(_waveTime);
         SpawnEnemies();
     }
 
@@ -57,41 +58,50 @@ public class SpawnerManager : MonoBehaviour
             yield return new WaitForSeconds(_timeBetweenSpawns);
             int spawnIndex = RandomIndexSpawn();
 
-            //Enemy enemy = _spawnList[spawnIndex].SpawnEnemy(_generatorPosition);
-            //if (enemy.TryGetComponent<HealthPoints>(out HealthPoints hp))
-            //{
-            //    hp.dead += HandleEnemiesDie;
-            //}
-            //enemy.transform.parent = transform;
-            //_enemyList.Add(enemy);
+            Enemy enemy = _spawnList[spawnIndex].SpawnEnemy(_generatorPosition);
+            enemy.onDead += HandleEnemiesDie;
+
+            _enemyList.Add(enemy);
         }
     }
 
-    private void HandleEnemiesDie()
+    private void HandleEnemiesDie(Enemy enemy)
     {
-        _enemiesDie++;
+        if (_enemyList.Contains(enemy))
+        {
+            enemy.onDead -= HandleEnemiesDie;
+            _enemyList.Remove(enemy);
+        }
         
+        _enemiesDie++;
+
         if (_enemiesDie >= _enemyPerWave)
         {
-            WinOrLoseLogic(true);
+            NextWaveCheck();
+        }
+    }
+
+    private void NextWaveCheck()
+    {
+        _enemiesDie = 0;
+        if (_actualWave >= _waveCount)
+        {
+            _gameManagerDataSource.Reference.HandleNextLevel();
+        }
+        else
+        {
+            StartCoroutine(WaveStart());
         }
     }
 
     private void HandleGeneratorDie()
     {
-        WinOrLoseLogic(false);
-    }
-
-    private void WinOrLoseLogic(bool isWinning)
-    {
-        _winData.boolData = isWinning;
-        _menuNameEvent.InvokeEvent(_finalSceneName);
-        _startedGame.InvokeEvent(false);
+        _gameManagerDataSource.Reference.HandleLoose();
     }
 
     private int RandomIndexSpawn()
     {
-        return Random.Range(0, _spawnList.Count);
+        return UnityEngine.Random.Range(0, _spawnList.Count);
     }
 
     private void Validate()
@@ -105,12 +115,6 @@ public class SpawnerManager : MonoBehaviour
         if (_spawnList.Count == 0)
         {
             Debug.LogError($"{name}: Spawn is null\nCheck and assigned one.\nDisabling component.");
-            enabled = false;
-            return;
-        }
-        if (!_winData)
-        {
-            Debug.LogError($"{name}: WinData is null\nCheck and assigned one.\nDisabling component.");
             enabled = false;
             return;
         }

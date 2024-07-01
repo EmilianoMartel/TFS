@@ -8,8 +8,19 @@ public class NavigationManager : MonoBehaviour
     [SerializeField] private List<MenuDataSource> menusWithId;
 
     [SerializeField] private GameManagerDataSource gameManagerDataSource;
+    [SerializeField] private StringChannel _finalScene;
 
     private int _currentMenuIndex = 0;
+
+    private void OnEnable()
+    {
+        _finalScene?.Sucription(HandleChangeMenu);
+    }
+
+    private void OnDisable()
+    {
+        _finalScene?.Unsuscribe(HandleChangeMenu);
+    }
 
     private void Start()
     {
@@ -28,10 +39,6 @@ public class NavigationManager : MonoBehaviour
 
     private void HandleChangeMenu(string id)
     {
-        if (gameManagerDataSource != null && gameManagerDataSource.Reference != null)
-        {
-            gameManagerDataSource.Reference.HandleSpecialEvents(id);
-        }
         for (var i = 0; i < menusWithId.Count; i++)
         {
             var menuWithId = menusWithId[i];
@@ -43,5 +50,13 @@ public class NavigationManager : MonoBehaviour
                 break;
             }
         }
+    }
+
+    public void PauseMoment(bool isPaused)
+    {
+        if (isPaused)
+            HandleChangeMenu("Pause");
+        else
+            HandleChangeMenu("Play");
     }
 }

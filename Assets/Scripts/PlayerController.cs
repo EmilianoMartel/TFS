@@ -1,14 +1,18 @@
 using StarterAssets;
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Animations.Rigging;
 using UnityEngine.InputSystem;
-using UnityEngine.Rendering;
-using UnityEngine.Windows;
 
-public class PlayerController : MonoBehaviour
+public class PlayerController : MonoBehaviour,IHealth
 {
+    [Header("Parameters")]
+    [SerializeField] private int _maxLife = 100;
+    [SerializeField] private Transform _respawnPoint;
+    [SerializeField] private Gun _gun;
+    private int _actualLife;
+
     [Header("Player")]
     [Tooltip("Move speed of the character in m/s")]
     public float MoveSpeed = 2.0f;
@@ -81,6 +85,8 @@ public class PlayerController : MonoBehaviour
     private GameObject _mainCamera;
 
     [SerializeField] private BoolChanelSo _aimEvent;
+    [SerializeField] private EmptyAction _playerDeadEvent;
+    [SerializeField] private FloatChannel _damagedEvent;
 
     private bool IsCurrentDeviceMouse
     {
@@ -106,6 +112,8 @@ public class PlayerController : MonoBehaviour
         {
             _mainCamera = GameObject.FindGameObjectWithTag("MainCamera");
         }
+
+        _actualLife = _maxLife;
     }
 
     private void Start()
@@ -316,5 +324,80 @@ public class PlayerController : MonoBehaviour
         }
 
         return targetSpeed;
+    }
+
+    public void TakeDamage(int damage)
+    {
+        _actualLife -= damage;
+        _damagedEvent?.InvokeEvent((float)_actualLife / _maxLife);
+        if (_actualLife < 0)
+        {
+            Dead();
+        }
+    }
+
+    public void Dead()
+    {
+        StartCoroutine(WaitForDead());
+    }
+
+    void IHealth.BasicDamage()
+    {
+        throw new NotImplementedException();
+    }
+
+    void IHealth.TakeTotalDamage()
+    {
+        throw new NotImplementedException();
+    }
+
+    private IEnumerator WaitForDead()
+    {
+        _playerDeadEvent?.InvokeEvent();
+        yield return new WaitForSeconds(0.1f);
+        transform.position = _respawnPoint.position;
+        _actualLife = _maxLife;
+        _damagedEvent?.InvokeEvent((float)_actualLife / (float)_maxLife);
+    }
+
+    public void SuscribeAction(Action<PlayerController> action)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void Unsuscribe(Action<PlayerController> action)
+    {
+        throw new NotImplementedException();
+    }
+
+    void IHealth.SuscribeAction(Action action)
+    {
+        throw new NotImplementedException();
+    }
+
+    void IHealth.Unsuscribe(Action action)
+    {
+        throw new NotImplementedException();
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.TryGetComponent(out Buff buff))
+            buff.DoSomething(this);
+    }
+
+    public void Health(int hp)
+    {
+        _actualLife += hp;
+        if (_actualLife > _maxLife)
+            _actualLife = _maxLife;
+
+        _damagedEvent?.InvokeEvent((float)_actualLife / (float)_maxLife);
+    }
+
+    public void AddAmmo(int cant)
+    {
+        if (_gun != null)
+            _gun.AddActualAmmoAmount(cant);
     }
 }

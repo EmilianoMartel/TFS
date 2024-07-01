@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: GameManagerSource
   m_EditorClassIdentifier: 
   _reference: {fileID: 0}
-  logEnabled: 1
+  logEnabled: 0

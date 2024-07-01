@@ -43,7 +43,7 @@ public class EnemyViewController : MonoBehaviour
         p_animetor.SetBool(_isAttackingParameter, isAttacking);
     }
 
-    private void HandleOnDie()
+    private void HandleOnDie(Enemy enemy)
     {
         p_animetor.SetBool(_isDyingParameter, true);
     }

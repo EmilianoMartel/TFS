@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class UiLife : MonoBehaviour
 {
     [SerializeField] private Image _maxLife;
-    [SerializeField] private ActionChanel<float> _health;
+    [SerializeField] private FloatChannel _health;
 
     private void OnEnable()
     {

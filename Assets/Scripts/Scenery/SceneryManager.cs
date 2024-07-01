@@ -10,7 +10,7 @@ public class SceneryManager : MonoBehaviour
     [SerializeField] private DataSource<SceneryManager> _sceneryManagerDataSource;
     [SerializeField] private List<ScenaryContainer> _defaultLevel;
     private List<SceneLevel> _currentLevel;
-
+    private List<SceneLevel> _firstLevel;
     public event Action onLoading = delegate { };
     /// <summary>
     /// The float given is always between 0 and 1
@@ -18,10 +18,14 @@ public class SceneryManager : MonoBehaviour
     public event Action<float> onLoadPercentage = delegate { };
     public event Action onLoaded = delegate { };
 
+    [SerializeField] private EmptyAction _finalGame;
+
     private void OnEnable()
     {
         if (_sceneryManagerDataSource != null)
             _sceneryManagerDataSource.Reference = this;
+
+        _finalGame?.Sucription(HandleLoose);
     }
 
     private void Awake()
@@ -41,6 +45,7 @@ public class SceneryManager : MonoBehaviour
         {
             _sceneryManagerDataSource.Reference = null;
         }
+        _finalGame?.Unsuscribe(HandleLoose);
     }
 
     public void ChangeLevel(List<SceneLevel> level)
@@ -112,6 +117,7 @@ public class SceneryManager : MonoBehaviour
             onLoadPercentage?.Invoke((float)current / total);
         }
         _currentLevel = level;
+        _firstLevel = level;
         onLoaded?.Invoke();
     }
 
@@ -130,16 +136,29 @@ public class SceneryManager : MonoBehaviour
     private IEnumerator Unload(List<SceneLevel> level, Action<int> onUnloadedSceneQtyChanged)
     {
         var current = 0;
+
         foreach (var sceneName in level)
         {
             if (!sceneName.IsUnloadable)
                 continue;
 
-            var loadOp = SceneManager.UnloadSceneAsync(sceneName.SceneName);
-            yield return new WaitUntil(() => loadOp.isDone);
+            if (TryUnloadScene(sceneName.SceneName, out var loadOp))
+                yield return new WaitUntil(() => loadOp.isDone);
+
             current++;
             onUnloadedSceneQtyChanged(current);
         }
+    }
+
+    private bool TryUnloadScene(string sceneName, out AsyncOperation loadOp)
+    {
+        if (SceneManager.GetSceneByName(sceneName).IsValid())
+        {
+            loadOp = SceneManager.UnloadSceneAsync(sceneName);
+            return true;
+        }
+        loadOp = null;
+        return false;
     }
 
     private List<SceneLevel> LevelContainerConverter(List<ScenaryContainer> container)
@@ -167,5 +186,26 @@ public class SceneryManager : MonoBehaviour
             enabled = false;
             return;
         }
+    }
+
+    private void HandleLoose()
+    {
+        StartCoroutine(ChangeFinalLevel(_currentLevel));
+    }
+
+    private IEnumerator ChangeFinalLevel(List<SceneLevel> currentLevel)
+    {
+        onLoading?.Invoke();
+
+        var total = currentLevel.Count;
+
+        onLoadPercentage?.Invoke(0);
+
+        yield return new WaitForSeconds(2);
+        yield return Unload(currentLevel,
+            currentIndex => onLoadPercentage?.Invoke((float)currentIndex / total));
+
+        _currentLevel = _firstLevel;
+        onLoaded?.Invoke();
     }
 }

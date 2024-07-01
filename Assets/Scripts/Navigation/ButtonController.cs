@@ -9,6 +9,7 @@ using UnityEngine.UI;
 public class ButtonController : MonoBehaviour
 {
     [SerializeField] private TMP_Text text;
+    [SerializeField] private GameManagerDataSource gameManagerDataSource;
     private string _id;
     private Button _button;
 
@@ -40,5 +41,9 @@ public class ButtonController : MonoBehaviour
     private void HandleButtonClick()
     {
         OnClick?.Invoke(_id);
+        if (gameManagerDataSource != null && gameManagerDataSource.Reference != null)
+        {
+            gameManagerDataSource.Reference.HandleSpecialEvents(_id);
+        }
     }
 }

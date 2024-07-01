@@ -5,6 +5,7 @@ using Cinemachine;
 using UnityEngine.Windows;
 using StarterAssets;
 using UnityEngine.InputSystem;
+using UnityEngine.Animations.Rigging;
 
 public class CamerAimController : MonoBehaviour
 {
@@ -29,6 +30,10 @@ public class CamerAimController : MonoBehaviour
     [SerializeField] private PlayerInput _playerInput;
 #endif
 
+    [SerializeField] private Transform _player;
+    [SerializeField] private Transform _cameraTarget;
+    [SerializeField] private float _cameraSensitivity = 10f;
+
     [Header("Camera aim Limits")]
     [SerializeField] private float _minLateralLimit = -45f;
     [SerializeField] private float _maxLateralLimit = 45f;
@@ -42,6 +47,7 @@ public class CamerAimController : MonoBehaviour
     private float _originalYaw;
     private float _originalPitch;
     private Quaternion _lastCameraRotation;
+    private float _verticalRotation = 0f;
 
     private bool IsCurrentDeviceMouse
     {
@@ -67,7 +73,8 @@ public class CamerAimController : MonoBehaviour
 
     private void Update()
     {
-        CameraRotation();
+        RotateHorizontally();
+        RotateVertically();
     }
 
     private void HandleAim(bool isAiming)
@@ -86,42 +93,35 @@ public class CamerAimController : MonoBehaviour
         }
     }
 
-    private void CameraRotation()
+    private void RotateHorizontally()
     {
-        // if there is an input and camera position is not fixed
-        if (_input.look.sqrMagnitude >= _threshold && !LockCameraPosition)
-        {
-            //Don't multiply mouse input by Time.deltaTime;
-            float deltaTimeMultiplier = IsCurrentDeviceMouse ? 1.0f : Time.deltaTime;
+        if (_input.look.x == 0f)
+            return;
 
-            _cinemachineTargetYaw += _input.look.x * deltaTimeMultiplier;
-            _cinemachineTargetPitch += _input.look.y * deltaTimeMultiplier;
-        }
+        float horizontalRotation = SmoothValue(_input.look.x);
 
-        if (_input.aim)
-        {
-            _cinemachineTargetYaw = ClampAngle(_cinemachineTargetYaw, _originalYaw + _minLateralLimit, _originalYaw + _maxLateralLimit);
-            _cinemachineTargetPitch = ClampAngle(_cinemachineTargetPitch, _originalPitch + _bottonClamp, _originalPitch + _topClamp);
-        }
-        else
-        {
-            // clamp our rotations so our values are limited 360 degrees
-            _cinemachineTargetYaw = ClampAngle(_cinemachineTargetYaw, float.MinValue, float.MaxValue);
-            _cinemachineTargetPitch = ClampAngle(_cinemachineTargetPitch, BottomClamp, TopClamp);
-        }
+        Vector3 targetRotation = _player.eulerAngles;
+        targetRotation.y += horizontalRotation;
 
-        // Cinemachine will follow this target
-        //CinemachineCameraTarget.transform.rotation = Quaternion.Euler(_cinemachineTargetPitch + CameraAngleOverride,
-        //    _cinemachineTargetYaw, 0.0f);
-        transform.rotation = Quaternion.Euler(_cinemachineTargetPitch + CameraAngleOverride,
-            _cinemachineTargetYaw, 0.0f);
+        _player.eulerAngles = targetRotation;
     }
 
-    private static float ClampAngle(float lfAngle, float lfMin, float lfMax)
+    private float SmoothValue(float value)
     {
-        if (lfAngle < -360f) lfAngle += 360f;
-        if (lfAngle > 360f) lfAngle -= 360f;
-        return Mathf.Clamp(lfAngle, lfMin, lfMax);
+        return value * _cameraSensitivity * Time.deltaTime;
     }
 
+    private void RotateVertically()
+    {
+        if (_input.look.y == 0f)
+            return;
+
+        Vector3 currentRotation = _cameraTarget.eulerAngles;
+        _verticalRotation += SmoothValue(_input.look.y);
+
+        _verticalRotation = Mathf.Clamp(_verticalRotation, _bottonClamp, _topClamp);
+        currentRotation.x = -_verticalRotation;
+
+        _cameraTarget.eulerAngles = currentRotation;
+    }
 }

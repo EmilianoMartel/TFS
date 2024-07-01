@@ -1,4 +1,5 @@
 using System;
+using Unity.VisualScripting.Antlr3.Runtime;
 using UnityEngine;
 #if ENABLE_INPUT_SYSTEM
 using UnityEngine.InputSystem;
@@ -16,6 +17,7 @@ namespace StarterAssets
 		public bool sprint;
 		public bool aim;
 		public bool fire;
+		public bool paused;
 
 		[Header("Movement Settings")]
 		public bool analogMovement;
@@ -30,6 +32,7 @@ namespace StarterAssets
 		[SerializeField] private BoolChanelSo _aimEvent;
 		[SerializeField] private EmptyAction _weapon1;
         [SerializeField] private EmptyAction _weapon2;
+		[SerializeField] private EmptyAction _pauseEvent;
 
 #if ENABLE_INPUT_SYSTEM
         public void OnMove(InputValue value)
@@ -82,6 +85,12 @@ namespace StarterAssets
             if (value.isPressed)
                 Weapon2Input();
         }
+
+        public void OnPause(InputValue value)
+        {
+            if (value.isPressed)
+                PauseInput();
+        }
 #endif
 
 
@@ -117,7 +126,13 @@ namespace StarterAssets
 			_isTriggerEvent?.InvokeEvent(newSprintState);
         }
 
-		public void ReloadInput()
+        public void PauseInput()
+        {
+			paused = !paused;
+            _pauseEvent?.InvokeEvent();
+        }
+
+        public void ReloadInput()
 		{
             _onReloadEvent?.InvokeEvent();
         }
@@ -126,6 +141,7 @@ namespace StarterAssets
         {
             _weapon1?.InvokeEvent();
         }
+
         public void Weapon2Input()
         {
             _weapon2?.InvokeEvent();

@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class PlayerBulletPool : BulletPool
 {
-
     [SerializeField] private Transform _pointShoot;
     [SerializeField] private EmptyAction _shootMomentEvent;
     [SerializeField] private ActionChanel<Transform> _pointShootEvent;
@@ -43,6 +42,6 @@ public class PlayerBulletPool : BulletPool
             p_poolBullets.Remove(temp);
 
         p_activeBullets.Add(temp);
-        temp.Shoot(_pointShoot.position, _pointShoot.right, p_speed);
+        temp.Shoot(_pointShoot.position, _pointShoot.forward, p_speed);
     }
 }

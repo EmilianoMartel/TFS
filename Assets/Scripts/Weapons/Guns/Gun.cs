@@ -16,7 +16,9 @@ public class Gun : Weapon
     [SerializeField] private bool _isAutomatic;
     [Tooltip("Time between shoots in RPM(round per minute).")]
     [SerializeField] private float _fireRate;
-    [Tooltip("Total ammo.")]
+    [Tooltip("Ammunition cartridge size")]
+    [SerializeField] private int _cartridgeSize = 50;
+    [Tooltip("Total ammo. This count the catridge size plus the ammo left.")]
     [SerializeField] private int _maxAmmo;
     [Tooltip("The time it takes to reload the gun.")]
     [SerializeField] private float _timeReload;
@@ -30,6 +32,7 @@ public class Gun : Weapon
 
     private float _timeBetweenShoot;
     private int _ammoLeft;
+    private int _totalAmmoAmmountLeft;
 
     [Header("Channels")]
     [SerializeField] private EmptyAction _shootEvent;
@@ -44,7 +47,7 @@ public class Gun : Weapon
     {
         base.OnEnable();
         if (_maxAmmoEvent)
-            _maxAmmoEvent.InvokeEvent(_maxAmmo);
+            _maxAmmoEvent.InvokeEvent(_totalAmmoAmmountLeft);
 
         if (_pointShootEvent)
             _pointShootEvent.InvokeEvent(_shootPoint);
@@ -67,8 +70,9 @@ public class Gun : Weapon
 
         //This count is to have the time between shots.
         _timeBetweenShoot = 60 / _fireRate;
-
-        _ammoLeft = _maxAmmo;
+        _pointShootEvent?.InvokeEvent(_shootPoint);
+        _ammoLeft = _cartridgeSize;
+        _totalAmmoAmmountLeft = _maxAmmo - _cartridgeSize;
     }
 
     protected override void Start()
@@ -76,7 +80,7 @@ public class Gun : Weapon
         base.Start();
 
         if (_maxAmmoEvent)
-            _maxAmmoEvent.InvokeEvent(_maxAmmo);
+            _maxAmmoEvent.InvokeEvent(_totalAmmoAmmountLeft);
 
         if (_actualAmmoEvent)
             _actualAmmoEvent.InvokeEvent(_ammoLeft);
@@ -134,9 +138,19 @@ public class Gun : Weapon
 
         yield return new WaitForSeconds(_timeReload);
 
-        _ammoLeft = _maxAmmo;
-        if (_actualAmmoEvent)
-            _actualAmmoEvent.InvokeEvent(_ammoLeft);
+        if(_totalAmmoAmmountLeft - _cartridgeSize <= 0)
+        {
+            _ammoLeft = _totalAmmoAmmountLeft;
+            _totalAmmoAmmountLeft = 0;
+        }
+        else
+        {
+            _ammoLeft = _cartridgeSize;
+            _totalAmmoAmmountLeft -= _cartridgeSize;
+        }
+        
+        _actualAmmoEvent?.InvokeEvent(_ammoLeft);
+        _maxAmmoEvent?.InvokeEvent(_totalAmmoAmmountLeft);
 
         _isReloaded = false;
     }
@@ -173,5 +187,11 @@ public class Gun : Weapon
             enabled = false;
             return;
         }
+    }
+
+    public void AddActualAmmoAmount(int cant)
+    {
+        _totalAmmoAmmountLeft += cant;
+        _maxAmmoEvent?.InvokeEvent(_totalAmmoAmmountLeft);
     }
 }

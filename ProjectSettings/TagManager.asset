@@ -9,15 +9,15 @@ TagManager:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Player
   - Water
   - UI
   - Floor
   - Enemy
-  - 
-  - 
-  - 
-  - 
+  - BulletEnemy
+  - BulletPlayer
+  - Changer
+  - Pointer
   - 
   - 
   - 

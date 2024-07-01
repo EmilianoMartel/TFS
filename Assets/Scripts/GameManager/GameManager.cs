@@ -13,7 +13,10 @@ public class GameManager : MonoBehaviour
     [SerializeField] private DataSource<SceneryManager> _sceneryManagerDataSource;
     [Header("Event Channels")]
     [SerializeField] private EmptyAction _endLevel;
-    [SerializeField] private BoolChanelSo _finalGame;
+    [SerializeField] private EmptyAction _looseLevel;
+    [SerializeField] private StringChannel _finalScene;
+    [SerializeField] private EmptyAction _finalGame;
+    [SerializeField] private BoolDataSO _finalGameData;
     private int _currentLevel = 0;
 
     private void OnEnable()
@@ -22,6 +25,7 @@ public class GameManager : MonoBehaviour
             _gameManagerDataSource.Reference = this;
         if (_endLevel != null)
             _endLevel.Sucription(HandleNextLevel);
+        _looseLevel?.Sucription(HandleLoose);
     }
 
     private void OnDisable()
@@ -32,6 +36,7 @@ public class GameManager : MonoBehaviour
         }
         if (_endLevel != null)
             _endLevel.Unsuscribe(HandleNextLevel);
+        _looseLevel?.Unsuscribe(HandleLoose);
     }
 
     public bool HandleSpecialEvents(string id)
@@ -39,6 +44,7 @@ public class GameManager : MonoBehaviour
         if (id == playId)
         {
             GameStart();
+            Cursor.lockState = CursorLockMode.Locked;
             return true;
         }
         else if (id == exitId)
@@ -61,14 +67,27 @@ public class GameManager : MonoBehaviour
         _currentLevel++;
     }
 
-    private void HandleNextLevel()
+    public void HandleNextLevel()
     {
         if (_currentLevel >= levels.Count)
         {
-            _finalGame?.InvokeEvent(true);
+            _finalScene?.InvokeEvent("FinalScreen");
+            _finalGame?.InvokeEvent();
+            _finalGameData.boolData = true;
+            _currentLevel = 0;
+            Cursor.lockState = CursorLockMode.None;
             return;
         }
 
         GameStart();
+    }
+
+    public void HandleLoose()
+    {
+        _finalScene?.InvokeEvent("FinalScreen");
+        _finalGame?.InvokeEvent();
+        _finalGameData.boolData = false;
+        Cursor.lockState = CursorLockMode.None;
+        _currentLevel = 0;
     }
 }

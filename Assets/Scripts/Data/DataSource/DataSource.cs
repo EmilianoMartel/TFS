@@ -3,7 +3,7 @@ using UnityEngine;
 public abstract class DataSource<T> : ScriptableObject
 {
     [SerializeField] protected T _reference;
-    [SerializeField] private bool logEnabled = true;
+    [SerializeField] private bool logEnabled = false;
 
     public T Reference
     {

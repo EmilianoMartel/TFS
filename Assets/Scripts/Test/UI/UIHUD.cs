@@ -8,7 +8,8 @@ public class UIHUD : MonoBehaviour
 {
     [Header("Parameters")]
     [SerializeField] private Image _crossHair;
-    [SerializeField] private TMP_Text _ammoText;
+    [SerializeField] private TMP_Text _ammoAmmountText;
+    [SerializeField] private TMP_Text _totalAmmoText;
 
     [Header("CrossView")]
     [SerializeField] private Color _viewEnemyColor;
@@ -49,7 +50,7 @@ public class UIHUD : MonoBehaviour
             enabled = false;
             return;
         }
-        if (!_ammoText)
+        if (!_ammoAmmountText)
         {
             Debug.LogError($"{name}: AmmoText is null.\nCheck and assigned one.\nDisabled component.");
             enabled = false;
@@ -71,11 +72,11 @@ public class UIHUD : MonoBehaviour
 
     private void HandleChangeAmmo(int actualAmmo)
     {
-        _ammoText.text = $"{actualAmmo} / {_maxAmmo}";
+        _ammoAmmountText.text = $"{actualAmmo}";
     }
 
     private void HandleMaxAmmo(int maxAmmo)
     {
-        _maxAmmo = maxAmmo;
+        _totalAmmoText.text = $"{maxAmmo}";
     }
 }
