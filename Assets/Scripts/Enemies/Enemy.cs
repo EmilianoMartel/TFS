@@ -11,6 +11,7 @@ public class Enemy : MonoBehaviour, IHealth<Enemy>, IHazard
     [SerializeField] protected Transform p_target;
     [SerializeField] protected Canvas p_lifeView;
     [SerializeField] private BoolChanelSo _startedGame;
+    [SerializeField] protected AudioSource p_shootSound;
     [SerializeField] private TransformChannelSo _spawnBuffPositionEvent;
 
     [Header("Parameters")]
@@ -103,6 +104,7 @@ public class Enemy : MonoBehaviour, IHealth<Enemy>, IHazard
         p_isAttacking = true;
         p_agent.SetDestination(transform.position);
         onAttack?.Invoke(p_isAttacking);
+        p_shootSound.Play();
         yield return new WaitForSeconds(p_attackCD);
         p_isAttacking = false;
         onAttack?.Invoke(p_isAttacking);

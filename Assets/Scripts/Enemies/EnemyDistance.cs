@@ -21,6 +21,7 @@ public class EnemyDistance : Enemy
         p_agent.SetDestination(transform.position);
         onAttack?.Invoke(p_isAttacking);
         _shoot?.InvokeEvent(_pointShoot,_pointShoot.forward);
+        p_shootSound.Play();
         yield return new WaitForSeconds(p_attackCD);
         p_isAttacking = false;
         onAttack?.Invoke(p_isAttacking);

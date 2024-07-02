@@ -17,6 +17,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private StringChannel _finalScene;
     [SerializeField] private EmptyAction _finalGame;
     [SerializeField] private BoolDataSO _finalGameData;
+    [SerializeField] private EmptyAction _backToMenu;
     private int _currentLevel = 0;
 
     private void OnEnable()
@@ -26,6 +27,7 @@ public class GameManager : MonoBehaviour
         if (_endLevel != null)
             _endLevel.Sucription(HandleNextLevel);
         _looseLevel?.Sucription(HandleLoose);
+        _backToMenu?.Sucription(HandleBackToMenu);
     }
 
     private void OnDisable()
@@ -37,6 +39,7 @@ public class GameManager : MonoBehaviour
         if (_endLevel != null)
             _endLevel.Unsuscribe(HandleNextLevel);
         _looseLevel?.Unsuscribe(HandleLoose);
+        _backToMenu?.Unsuscribe(HandleBackToMenu);
     }
 
     public bool HandleSpecialEvents(string id)
@@ -88,6 +91,14 @@ public class GameManager : MonoBehaviour
         _finalGame?.InvokeEvent();
         _finalGameData.boolData = false;
         Cursor.lockState = CursorLockMode.None;
+        _currentLevel = 0;
+    }
+
+    private void HandleBackToMenu()
+    {
+        _finalScene?.InvokeEvent("Menu");
+        _finalGame?.InvokeEvent();
+        _finalGameData.boolData = false;
         _currentLevel = 0;
     }
 }

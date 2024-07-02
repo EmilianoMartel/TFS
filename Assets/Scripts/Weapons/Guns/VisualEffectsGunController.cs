@@ -4,8 +4,11 @@ using UnityEngine;
 
 public class VisualEffectsGunController : MonoBehaviour
 {
+    [SerializeField] private AudioSource _shootSound;
+    [SerializeField] private AudioSource _reloadSound;
     [Header("EventChannels")]
     [SerializeField] private EmptyAction _shootMoment;
+    [SerializeField] private EmptyAction _reloadEvent;
     [Header("Particles")]
     [SerializeField] private ParticleSystem _spark;
     [SerializeField] private ParticleSystem _flash;
@@ -16,6 +19,7 @@ public class VisualEffectsGunController : MonoBehaviour
             _shootMoment.Sucription(HandleStartExplotion);
         _spark.gameObject.SetActive(true);
         _flash.gameObject.SetActive(true);
+        _reloadEvent.Sucription(HandleReload);
     }
 
     private void OnDisable()
@@ -24,6 +28,7 @@ public class VisualEffectsGunController : MonoBehaviour
             _shootMoment.Unsuscribe(HandleStartExplotion);
         _spark.gameObject.SetActive(false);
         _flash.gameObject.SetActive(false);
+        _reloadEvent.Unsuscribe(HandleReload);
     }
 
     private void Awake()
@@ -46,5 +51,11 @@ public class VisualEffectsGunController : MonoBehaviour
     {
         _spark.Play();
         _flash.Play();
+        _shootSound.Play();
+    }
+
+    private void HandleReload()
+    {
+        _reloadSound.Play();
     }
 }

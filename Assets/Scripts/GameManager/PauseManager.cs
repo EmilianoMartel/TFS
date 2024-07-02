@@ -8,15 +8,19 @@ public class PauseManager : MonoBehaviour
 
     [SerializeField] private NavigationManager _navManager;
     [SerializeField] private EmptyAction _pause;
+    [SerializeField] private EmptyAction _backToMenu;
+    
 
     private void OnEnable()
     {
         _pause?.Sucription(HandlePaused);
+        _backToMenu?.Sucription(HandleBackToMenu);
     }
 
     private void OnDisable()
     {
         _pause?.Unsuscribe(HandlePaused);
+        _backToMenu?.Unsuscribe(HandleBackToMenu);
     }
 
     private void HandlePaused()
@@ -33,5 +37,11 @@ public class PauseManager : MonoBehaviour
             Time.timeScale = 1;
             Cursor.lockState = CursorLockMode.Locked;
         }
+    }
+
+    private void HandleBackToMenu()
+    {
+        Time.timeScale = 1;
+        Cursor.lockState = CursorLockMode.None;
     }
 }

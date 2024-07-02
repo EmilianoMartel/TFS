@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class EnemySpecialAttack : Enemy
 {
+    [SerializeField] protected AudioSource _specialAttackSound;
     [SerializeField] private float _specialAttackAnimationTime = 0.5f;
     [SerializeField] private float _specialAttackCd = 5f;
     [SerializeField] private SpecialSO _data;
@@ -59,11 +60,11 @@ public class EnemySpecialAttack : Enemy
         p_agent.enabled = false;
         _specialAttackStarted = true;
         startSpecialAttack?.Invoke();
-
+        _specialAttackSound.Play();
         yield return new WaitForSeconds(_data.startAnimationTime);
 
         _specialBullet.Shoot(_pointShoot.position, _pointShoot.forward, _specialSpeed);
-
+        
         if (_data.jumpForce > 0)
             yield return StartCoroutine(Jump());
 
