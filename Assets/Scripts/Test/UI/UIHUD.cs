@@ -20,8 +20,6 @@ public class UIHUD : MonoBehaviour
     [SerializeField] private ActionChanel<int> _actualAmmoEvent;
     [SerializeField] private ActionChanel<int> _maxAmmoEvent;
 
-    private int _maxAmmo = 0;
-
     private void OnEnable()
     {
         if (_actualAmmoEvent)

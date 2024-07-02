@@ -2824,7 +2824,7 @@ PrefabInstance:
     - target: {fileID: 5262290358624205264, guid: bcdfb5be9ea2aa24797188d7f54f67ec,
         type: 3}
       propertyPath: CameraCollisionFilter.m_Bits
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6177265802301650602, guid: bcdfb5be9ea2aa24797188d7f54f67ec,
         type: 3}
@@ -12215,7 +12215,7 @@ PrefabInstance:
     - target: {fileID: 4032956925236448222, guid: c40ffb3ff66597c4a8544bfc9ce6203e,
         type: 3}
       propertyPath: CameraCollisionFilter.m_Bits
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c40ffb3ff66597c4a8544bfc9ce6203e, type: 3}
@@ -53192,6 +53192,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1936241450929849760, guid: 98787792a9242314a9d66393e8d9c765,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 1936241451504117055, guid: 98787792a9242314a9d66393e8d9c765,
         type: 3}

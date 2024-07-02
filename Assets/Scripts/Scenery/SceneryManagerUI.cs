@@ -56,7 +56,11 @@ public class SceneryManagerUI : MonoBehaviour
     private void UpdateLoadBarFill(float percentage)
     {
         if (percentage == 0)
+        {
+            loadingBarFill.fillAmount = 0f;
             return;
+        }
+            
 
         StartCoroutine(LerpFill(loadingBarFill.fillAmount, percentage));
     }

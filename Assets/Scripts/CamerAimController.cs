@@ -35,8 +35,6 @@ public class CamerAimController : MonoBehaviour
     [SerializeField] private float _cameraSensitivity = 10f;
 
     [Header("Camera aim Limits")]
-    [SerializeField] private float _minLateralLimit = -45f;
-    [SerializeField] private float _maxLateralLimit = 45f;
     [SerializeField] private float _bottonClamp = -10;
     [SerializeField] private float _topClamp = 10;
 

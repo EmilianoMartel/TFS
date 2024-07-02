@@ -50,7 +50,7 @@ public class Bullet : MonoBehaviour, IHazard
         StartCoroutine(WaitForDieLogic());
     }
 
-    private void OnTriggerEnter(Collider other)
+    protected void OnTriggerEnter(Collider other)
     {
         if(_impactSystem  != null)
         {
