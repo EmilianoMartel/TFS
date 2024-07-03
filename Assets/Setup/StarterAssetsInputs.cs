@@ -34,6 +34,9 @@ namespace StarterAssets
         [SerializeField] private EmptyAction _weapon2;
 		[SerializeField] private EmptyAction _pauseEvent;
 
+		[Header("Other parameters")]
+        [SerializeField] private string _boolStringPrefab = "Yaxis";
+
 #if ENABLE_INPUT_SYSTEM
         public void OnMove(InputValue value)
 		{
@@ -101,7 +104,9 @@ namespace StarterAssets
 
 		public void LookInput(Vector2 newLookDirection)
 		{
-			look = newLookDirection;
+			newLookDirection.y *= PlayerPrefs.GetInt(_boolStringPrefab);
+
+            look = newLookDirection;
 		}
 
 		public void JumpInput(bool newJumpState)
