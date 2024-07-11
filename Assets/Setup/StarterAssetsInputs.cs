@@ -99,34 +99,52 @@ namespace StarterAssets
 
         public void MoveInput(Vector2 newMoveDirection)
 		{
-			move = newMoveDirection;
+            if (paused)
+                return;
+
+            move = newMoveDirection;
 		} 
 
 		public void LookInput(Vector2 newLookDirection)
 		{
-			newLookDirection.y *= PlayerPrefs.GetInt(_boolStringPrefab);
+            if (paused)
+                return;
+
+            newLookDirection.y *= PlayerPrefs.GetInt(_boolStringPrefab);
 
             look = newLookDirection;
 		}
 
 		public void JumpInput(bool newJumpState)
 		{
-			jump = newJumpState;
+            if (paused)
+                return;
+
+            jump = newJumpState;
 		}
 
 		public void SprintInput(bool newSprintState)
 		{
-			sprint = newSprintState;
+            if (paused)
+                return;
+
+            sprint = newSprintState;
 		}
 
         public void AimInput(bool newSprintState)
         {
+            if (paused)
+                return;
+
             aim = newSprintState;
             _aimEvent?.InvokeEvent(newSprintState);
         }
 
         public void FireInput(bool newSprintState)
         {
+			if (paused)
+				return;
+
             fire = newSprintState;
 			_isTriggerEvent?.InvokeEvent(newSprintState);
         }
@@ -139,16 +157,25 @@ namespace StarterAssets
 
         public void ReloadInput()
 		{
+            if (paused)
+                return;
+
             _onReloadEvent?.InvokeEvent();
         }
 
         public void Weapon1Input()
         {
+            if (paused)
+                return;
+
             _weapon1?.InvokeEvent();
         }
 
         public void Weapon2Input()
         {
+            if (paused)
+                return;
+
             _weapon2?.InvokeEvent();
         }
 
